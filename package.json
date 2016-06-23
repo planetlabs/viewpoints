@@ -56,5 +56,8 @@
     "react-dom": "^0.14.7",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0"
+  },
+  "dependencies": {
+    "react-bootstrap": "^0.29.5"
   }
 }
