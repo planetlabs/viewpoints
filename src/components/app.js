@@ -1,7 +1,14 @@
 var React = require('react');
 var ViewpointsGraph = require('./viewpointsgraph');
+var processCsv = require('../util/csv');
 
 var App = React.createClass({
+
+  getInitialState() {
+    return {
+      options: ["A", "B", "C"]
+    };
+  },
 
   _onUploadChange: function(event) {
     var reader = new FileReader();
@@ -11,14 +18,18 @@ var App = React.createClass({
 
   _onReaderLoad: function(event) {
     // TODO: parse the csv
-    // var data = parseData(event.target.result);
-    // this.setState({data: data});
+    var parsed = processCsv(event.target.result);
+    console.log("parsed:", parsed);
+    this.setState({
+      options: parsed.titles,
+      columns: parsed.columns
+    });
   },
 
   render: function() {
     return (
       <div>
-        <ViewpointsGraph options={['Alpha', 'Beta', 'Gamma']}/>
+        <ViewpointsGraph options={this.state.options}/>
         <input accept=".csv" onChange={this._onUploadChange} type="file"/>
       </div>);
   }
