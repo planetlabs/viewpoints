@@ -28,7 +28,10 @@ var Graph = React.createClass({
   render: function() {
     return (
       <div className={this.props.className || 'vp-graph'}>
-        <Viewport/>
+        <Viewport columns={this.props.columns}
+            options={this.props.options}
+            xAxisSelectedIndex={this.state.xAxisSelectedIndex}
+            yAxisSelectedIndex={this.state.yAxisSelectedIndex}/>
         <AxesSelector onXAxisSelect={this._onXAxisSelect}
             onYAxisSelect={this._onYAxisSelect}
             options={this.props.options}
