@@ -5,9 +5,9 @@ var App = React.createClass({
   render: function() {
     return (
       <div>
-        <ViewpointsGraph ref="viewport"></ViewpointsGraph>
+        <ViewpointsGraph options={['Alpha', 'Beta', 'Gamma']}/>
       </div>);
-  },
+  }
 });
 
 module.exports = App;

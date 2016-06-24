@@ -1,32 +1,32 @@
 var React = require('react');
-var DropdownButton = require('react-bootstrap').DropdownButton;
-var MenuItem = require('react-bootstrap').MenuItem;
+var bootstrap = require('react-bootstrap');
+var DropdownButton = bootstrap.DropdownButton;
+var MenuItem = bootstrap.MenuItem;
 
 
 var Dropdown = React.createClass({
-  getInitialState() {
-    return {
-      options: ["Alpha", "Beta", "Gamma"],
-      index: 0
-    };
-  },
-  render() {
-    var createMenuItem = function(option, ind) {
-        return <MenuItem eventKey={option} key={ind} onSelect={this.onselect}>{option}</MenuItem>;
-    }.bind(this);
 
+  propTypes: {
+    onSelect: React.PropTypes.func,
+    options: React.PropTypes.array,
+    selectedIndex: React.PropTypes.number
+  },
+
+  render: function() {
     return (
-      <DropdownButton title={this.state.options[this.state.index]}>
-        {this.state.options.map(createMenuItem)}
+      <DropdownButton title={this.props.options[this.props.selectedIndex]}>
+        {this.props.options.map((option, index) => {
+          return (
+            <MenuItem active={index === this.props.selectedIndex}
+                key={index}
+                onSelect={this.props.onSelect.bind(null, index)}>
+              {option}
+            </MenuItem>
+          );
+        })}
       </DropdownButton>
     );
-  },
-  onselect: function(eventKey, event) {
-    var ind = this.state.options.findIndex(x => x === eventKey);
-    this.setState({
-        index: ind
-    });
-  },
+  }
 });
 
 module.exports = Dropdown;
