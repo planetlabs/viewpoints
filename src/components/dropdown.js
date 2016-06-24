@@ -6,13 +6,13 @@ var MenuItem = require('react-bootstrap').MenuItem;
 var Dropdown = React.createClass({
   getInitialState() {
     return {
-      options: ["Select Option", "Alpha", "Beta"],
+      options: ["Alpha", "Beta", "Gamma"],
       index: 0
     };
   },
   render() {
     var createMenuItem = function(option) {
-        return <MenuItem href="#aef" onClick={this.onclick}>{option}</MenuItem>;
+        return <MenuItem eventKey={option} onSelect={this.onselect}>{option}</MenuItem>;
     }.bind(this);
 
     return (
@@ -21,8 +21,11 @@ var Dropdown = React.createClass({
       </DropdownButton>
     );
   },
-  onclick: function() {
-    console.log("Inner clicked");
+  onselect: function(eventKey, event) {
+    var ind = this.state.options.findIndex(x => x === eventKey);
+    this.setState({
+        index: ind
+    });
   },
 });
 
