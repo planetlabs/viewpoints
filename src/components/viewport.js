@@ -5,8 +5,8 @@ var Webgl = require('../util/webgl');
 var Viewport = React.createClass({
 
   propTypes: {
-    options: React.PropTypes.arrayOf(React.PropTypes.string),
     columns: React.PropTypes.array,
+    options: React.PropTypes.arrayOf(React.PropTypes.string),
     xAxisSelectedIndex: React.PropTypes.number,
     yAxisSelectedIndex: React.PropTypes.number
   },
@@ -44,6 +44,12 @@ var Viewport = React.createClass({
   componentDidMount: function() {
     var canvas = ReactDOM.findDOMNode(this);
     this._prepareWebgl(canvas);
+    this._setAxes(canvas);
+    this._paint(canvas);
+  },
+
+  componentDidUpdate: function() {
+    var canvas = ReactDOM.findDOMNode(this);
     this._setAxes(canvas);
     this._paint(canvas);
   },
