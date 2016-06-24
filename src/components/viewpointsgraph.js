@@ -5,7 +5,8 @@ var Viewport = require('./viewport');
 var ViewpointsGraph = React.createClass({
 
   propTypes: {
-    options: React.PropTypes.arrayOf(React.PropTypes.string)
+    options: React.PropTypes.arrayOf(React.PropTypes.string),
+    columns: React.PropTypes.array
   },
 
   getInitialState: function() {

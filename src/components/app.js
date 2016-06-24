@@ -12,6 +12,14 @@ var App = React.createClass({
     };
   },
 
+  // getInitialState() {
+  //   return {
+  //     columns: [[1, 1, 2, 3], [3, 4, 5, 1], [1, 2, 1, 2]],
+  //     options: ["Alpha", "Beta", "Gamma"],
+  //     graphCount: 1
+  //   };
+  // },
+
   _onUploadChange: function(event) {
     var reader = new FileReader();
     reader.onload = this._onReaderLoad;
