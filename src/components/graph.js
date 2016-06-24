@@ -42,7 +42,9 @@ var Graph = React.createClass({
               selectedIndex={this.state.yAxisSelectedIndex}/>
         </div>
         <Viewport columns={this.props.columns}
+            height={100}
             options={this.props.options}
+            width={100}
             xAxisSelectedIndex={this.state.xAxisSelectedIndex}
             yAxisSelectedIndex={this.state.yAxisSelectedIndex}/>
       </div>

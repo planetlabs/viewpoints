@@ -6,7 +6,9 @@ var Viewport = React.createClass({
 
   propTypes: {
     columns: React.PropTypes.array,
+    height: React.PropTypes.number,
     options: React.PropTypes.arrayOf(React.PropTypes.string),
+    width: React.PropTypes.number,
     xAxisSelectedIndex: React.PropTypes.number,
     yAxisSelectedIndex: React.PropTypes.number
   },
@@ -126,10 +128,6 @@ var Viewport = React.createClass({
     }
   },
 
-  render: function() {
-    return <canvas>I am a viewport!</canvas>;
-  },
-
   _setAxes: function(canvas) {
     var xAxis = this.props.columns[this.props.xAxisSelectedIndex];
     var yAxis = this.props.columns[this.props.yAxisSelectedIndex];
@@ -210,6 +208,15 @@ var Viewport = React.createClass({
     }
     this.normalIndicesArrays = normalIndicesArrays;
     this.ptArrays = ptArrays;
+  },
+
+  render: function() {
+    return (
+      <canvas height={this.props.height}
+          width={this.props.width}>
+        I am a viewport!
+      </canvas>
+    );
   }
 });
 
