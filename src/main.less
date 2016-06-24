@@ -1,6 +1,7 @@
 @import url('https://fonts.googleapis.com/css?family=Open+Sans:400,600,700');
 @import (less) '../node_modules/normalize-css/normalize.css';
 
+@import './variables';
 @import './components/app';
 
 *, *:before, *:after {
@@ -9,4 +10,8 @@
 
 html {
   box-sizing: border-box;
+}
+
+body {
+  color: @gray-darker;
 }

@@ -8,7 +8,7 @@ var App = React.createClass({
     return {
       columns: [],
       options: [],
-      graphCount: 1
+      graphCount: 0
     };
   },
 
@@ -21,24 +21,41 @@ var App = React.createClass({
   _onReaderLoad: function(event) {
     // TODO: parse the csv
     var parsed = processCsv(event.target.result);
-    console.log("parsed:", parsed);
+    console.log('parsed:', parsed);
     this.setState({
       options: parsed.titles,
-      columns: parsed.columns
+      columns: parsed.columns,
+      graphCount: 1
     });
   },
 
+  _onAddGraphClick: function() {
+    this.setState({graphCount: this.state.graphCount + 1});
+  },
+
   render: function() {
+
+    var graphs = [];
+    for (var i = 0; i < this.state.graphCount; i++) {
+      graphs.push(
+        <ViewpointsGraph columns={this.state.columns}
+            key={i}
+            options={this.state.options}/>
+      );
+    }
+
     return (
-      <div>
-        {this.state.options.length > 0 && Array.apply(null, Array(this.state.graphCount)).map((item, index) => {
-          return (
-            <ViewpointsGraph columns={this.state.columns}
-                key={index}
-                options={this.state.options}/>
-          );
-        })}
-        <input accept=".csv" onChange={this._onUploadChange} type="file"/>
+      <div className="vp-app">
+        <div className="vp-upload">
+          <span>Upload a new dataset</span>
+          <input accept=".csv" onChange={this._onUploadChange} type="file"/>
+        </div>
+        {this.state.graphCount > 0 && <div className="vp-graphs">
+          {graphs}
+          <div className="vp-graph" onClick={this._onAddGraphClick}>
+            <span>Add a graph</span>
+          </div>
+        </div>}
       </div>);
   }
 });

@@ -25,7 +25,7 @@ var ViewpointsGraph = React.createClass({
 
   render: function() {
     return (
-      <div>
+      <div className="vp-graph">
         <Viewport/>
         <AxesSelector onXAxisSelect={this._onXAxisSelect}
             onYAxisSelect={this._onYAxisSelect}
