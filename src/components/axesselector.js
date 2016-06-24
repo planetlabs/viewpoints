@@ -11,17 +11,6 @@ var AxesSelector = React.createClass({
     yAxisSelectedIndex: React.PropTypes.number
   },
 
-  setOptions: function(options, xindex, yindex) {
-    this.refs.xaxis.setState({
-      options: options,
-      index: xindex
-    });
-    this.refs.yaxis.setState({
-      options: options,
-      index: yindex
-    });
-  },
-
   render: function() {
     return (
       <div>
