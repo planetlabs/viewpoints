@@ -11,8 +11,8 @@ var Dropdown = React.createClass({
     };
   },
   render() {
-    var createMenuItem = function(option) {
-        return <MenuItem eventKey={option} onSelect={this.onselect}>{option}</MenuItem>;
+    var createMenuItem = function(option, ind) {
+        return <MenuItem eventKey={option} key={ind} onSelect={this.onselect}>{option}</MenuItem>;
     }.bind(this);
 
     return (
