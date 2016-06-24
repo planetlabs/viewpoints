@@ -9,7 +9,8 @@ var Graphs = React.createClass({
     columns: React.PropTypes.array,
     count: React.PropTypes.number,
     graphClassName: React.PropTypes.string,
-    options: React.PropTypes.arrayOf(React.PropTypes.string)
+    options: React.PropTypes.arrayOf(React.PropTypes.string),
+    rowClassName: React.PropTypes.string
   },
 
   render: function() {
@@ -18,9 +19,14 @@ var Graphs = React.createClass({
       return null;
     }
 
-    var graphs = [];
+    var rows = [];
     for (var i = 0; i < this.props.count; i++) {
-      graphs.push(
+      var rowIndex = this.props.count > 2 ?
+          Math.round(i / this.props.count) : 0;
+      if (!rows[rowIndex]) {
+        rows[rowIndex] = [];
+      }
+      rows[rowIndex].push(
         <ViewpointsGraph className={this.props.graphClassName}
             columns={this.props.columns}
             key={i}
@@ -28,7 +34,18 @@ var Graphs = React.createClass({
       );
     }
 
-    return <div className={this.props.className || 'vp-graphs'}>{graphs}</div>;
+    return (
+      <div className={this.props.className || 'vp-graphs'}>
+        {rows.map((graphs, index) => {
+          return (
+            <div className={this.props.rowClassName || 'vp-graphs-row'}
+                key={index}>
+              {graphs}
+            </div>
+          );
+        })}
+      </div>
+    );
   }
 });
 

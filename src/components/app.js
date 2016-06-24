@@ -6,7 +6,7 @@ var processCsv = require('../util/csv');
 
 var App = React.createClass({
 
-  getInitialState() {
+  getInitialState: function() {
     return {
       columns: [],
       options: [],
@@ -46,9 +46,15 @@ var App = React.createClass({
   render: function() {
     return (
       <div className="vp-app">
-        <div className="vp-upload">
-          <span>Upload a new dataset</span>
-          <input accept=".csv" onChange={this._onUploadChange} type="file"/>
+        <div className="vp-header">
+          <div className="vp-header-item vp-upload">
+            <span>Upload a new dataset</span>
+            <input accept=".csv" onChange={this._onUploadChange} type="file"/>
+          </div>
+          {this.state.graphCount > 0 && <div className="vp-header-item"
+              onClick={this._onAddGraphClick}>
+            Add graph
+          </div>}
         </div>
         <Graphs columns={this.state.columns}
             count={this.state.graphCount}

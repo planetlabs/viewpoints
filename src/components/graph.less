@@ -1,0 +1,17 @@
+.vp-graph {
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid @gray-lighter;
+  position: relative;
+  &:last-child {
+    border-right: none;
+  }
+
+  canvas {
+    flex-grow: 1;
+  }
+  .vp-graph-axes {
+    flex-shrink: 0;
+    padding: @padding-small @padding-base;
+  }
+}
