@@ -1,5 +1,7 @@
 var React = require('react');
-var ViewpointsGraph = require('./viewpointsgraph');
+
+var Graphs = require('./graphs');
+
 var processCsv = require('../util/csv');
 
 var App = React.createClass({
@@ -42,28 +44,15 @@ var App = React.createClass({
   },
 
   render: function() {
-
-    var graphs = [];
-    for (var i = 0; i < this.state.graphCount; i++) {
-      graphs.push(
-        <ViewpointsGraph columns={this.state.columns}
-            key={i}
-            options={this.state.options}/>
-      );
-    }
-
     return (
       <div className="vp-app">
         <div className="vp-upload">
           <span>Upload a new dataset</span>
           <input accept=".csv" onChange={this._onUploadChange} type="file"/>
         </div>
-        {this.state.graphCount > 0 && <div className="vp-graphs">
-          {graphs}
-          <div className="vp-graph" onClick={this._onAddGraphClick}>
-            <span>Add a graph</span>
-          </div>
-        </div>}
+        <Graphs columns={this.state.columns}
+            count={this.state.graphCount}
+            options={this.state.options}/>
       </div>);
   }
 });

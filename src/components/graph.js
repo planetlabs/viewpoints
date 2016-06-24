@@ -2,11 +2,12 @@ var React = require('react');
 var AxesSelector = require('./axesselector');
 var Viewport = require('./viewport');
 
-var ViewpointsGraph = React.createClass({
+var Graph = React.createClass({
 
   propTypes: {
-    options: React.PropTypes.arrayOf(React.PropTypes.string),
-    columns: React.PropTypes.array
+    className: React.PropTypes.string,
+    columns: React.PropTypes.array,
+    options: React.PropTypes.arrayOf(React.PropTypes.string)
   },
 
   getInitialState: function() {
@@ -26,7 +27,7 @@ var ViewpointsGraph = React.createClass({
 
   render: function() {
     return (
-      <div className="vp-graph">
+      <div className={this.props.className || 'vp-graph'}>
         <Viewport/>
         <AxesSelector onXAxisSelect={this._onXAxisSelect}
             onYAxisSelect={this._onYAxisSelect}
@@ -38,4 +39,4 @@ var ViewpointsGraph = React.createClass({
   }
 });
 
-module.exports = ViewpointsGraph;
+module.exports = Graph;

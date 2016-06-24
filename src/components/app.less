@@ -39,33 +39,3 @@
     }
   }
 }
-
-.vp-graphs {
-  flex-grow: 1;
-  padding: @padding-larger;
-  .vp-graph {
-    display: inline-block;
-    vertical-align: top;
-    width: 400px;
-    height: 400px;
-    position: relative;
-    &:last-child {
-      border: 1px dashed @gray-light;
-      border-radius: @border-radius-large;
-      cursor: pointer;
-      &:hover {
-        background-color: @gray-lightest;
-      }
-
-      span {
-        width: 100%;
-        font-size: 1.5em;
-        text-align: center;
-        position: absolute;
-        top: 50%;
-        left: 0;
-        transform: translateY(-50%);
-      }
-    }
-  }
-}
