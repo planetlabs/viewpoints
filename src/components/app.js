@@ -6,7 +6,9 @@ var App = React.createClass({
 
   getInitialState() {
     return {
-      options: ["A", "B", "C"]
+      columns: [],
+      options: [],
+      graphCount: 1
     };
   },
 
@@ -29,7 +31,13 @@ var App = React.createClass({
   render: function() {
     return (
       <div>
-        <ViewpointsGraph options={this.state.options}/>
+        {this.state.options.length > 0 && Array.apply(null, Array(this.state.graphCount)).map((item, index) => {
+          return (
+            <ViewpointsGraph columns={this.state.columns}
+                key={index}
+                options={this.state.options}/>
+          );
+        })}
         <input accept=".csv" onChange={this._onUploadChange} type="file"/>
       </div>);
   }
