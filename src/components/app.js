@@ -1,14 +1,11 @@
 var React = require('react');
-var AxesSelector = require('./axesselector');
-var Viewport = require('./viewport');
+var ViewpointsGraph = require('./viewpointsgraph');
 
 var App = React.createClass({
-
   render: function() {
     return (
       <div>
-        <Viewport ref="viewport"></Viewport>
-        <AxesSelector ref="axes"></AxesSelector>
+        <ViewpointsGraph ref="viewport"></ViewpointsGraph>
       </div>);
   },
 });
