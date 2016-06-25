@@ -44,6 +44,15 @@ var Viewport = React.createClass({
     this.gl.viewport(0, 0, this.props.width, this.props.height);
     this._paint(canvas);
   },
+  componentWillReceiveProps(nextProps) {
+    var canvas = ReactDOM.findDOMNode(this);
+
+    if (this.props.xAxisSelectedIndex != nextProps.xAxisSelectedIndex ||
+        this.props.yAxisSelectedIndex != nextProps.yAxisSelectedIndex) {
+      this._setAxes(
+        canvas, nextProps.xAxisSelectedIndex, nextProps.yAxisSelectedIndex);
+    }
+  },
 
   _prepareWebgl: function(canvas) {
     var gl = Webgl.initWebGL(canvas);
@@ -117,9 +126,9 @@ var Viewport = React.createClass({
     }
   },
 
-  _setAxes: function(canvas) {
-    var xAxis = this.props.columns[this.props.xAxisSelectedIndex];
-    var yAxis = this.props.columns[this.props.yAxisSelectedIndex];
+  _setAxes: function(canvas, indexX, indexY) {
+    var xAxis = this.props.columns[indexX || this.props.xAxisSelectedIndex];
+    var yAxis = this.props.columns[indexY || this.props.yAxisSelectedIndex];
 
     var xMax = null;
     var xMin = null;
