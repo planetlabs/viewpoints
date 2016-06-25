@@ -9,14 +9,33 @@ var Graph = React.createClass({
     axesClassName: React.PropTypes.string,
     className: React.PropTypes.string,
     columns: React.PropTypes.array,
-    options: React.PropTypes.arrayOf(React.PropTypes.string)
+    options: React.PropTypes.arrayOf(React.PropTypes.string),
+    viewportClassName: React.PropTypes.string
   },
 
   getInitialState: function() {
     return {
+      viewportHeight: 600,
+      viewportWidth: 600,
       xAxisSelectedIndex: 0,
       yAxisSelectedIndex: 1
     };
+  },
+
+  componentDidMount: function() {
+    this._onResize();
+    window.addEventListener('resize', this._onResize);
+  },
+
+  componentWillUnmount: function() {
+    window.removeEventListener('resize', this._onResize);
+  },
+
+  _onResize: function() {
+    this.setState({
+      viewportHeight: this.refs.viewport.offsetHeight,
+      viewportWidth: this.refs.viewport.offsetWidth
+    });
   },
 
   _onXAxisSelect: function(index) {
@@ -41,10 +60,11 @@ var Graph = React.createClass({
               ref="yaxis"
               selectedIndex={this.state.yAxisSelectedIndex}/>
         </div>
+        <div className={this.props.viewportClassName || 'vp-graph-viewport'} ref="viewport"/>
         <Viewport columns={this.props.columns}
-            height={100}
+            height={this.state.viewportHeight}
             options={this.props.options}
-            width={100}
+            width={this.state.viewportWidth}
             xAxisSelectedIndex={this.state.xAxisSelectedIndex}
             yAxisSelectedIndex={this.state.yAxisSelectedIndex}/>
       </div>

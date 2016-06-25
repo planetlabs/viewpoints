@@ -16,19 +16,8 @@ var Viewport = React.createClass({
   vertexShader: `
     attribute vec2 a_position;
 
-    uniform vec2 u_resolution;
-
     void main() {
-       // convert the rectangle from pixels to 0.0 to 1.0
-       vec2 zeroToOne = a_position / u_resolution;
-
-       // convert from 0->1 to 0->2
-       vec2 zeroToTwo = zeroToOne * 2.0;
-
-       // convert from 0->2 to -1->+1 (clipspace)
-       vec2 clipSpace = zeroToTwo - 1.0;
-
-       gl_Position = vec4(clipSpace, 0, 1);
+       gl_Position = vec4(a_position, 0, 1);
        gl_PointSize = 2.0;
     }
   `,
@@ -78,10 +67,10 @@ var Viewport = React.createClass({
     gl.enableVertexAttribArray(positionLocation);
     gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
     // set the resolution
-    var resolutionLocation = gl.getUniformLocation(program, "u_resolution");
+    // var resolutionLocation = gl.getUniformLocation(program, "u_resolution");
+    // gl.uniform2f(resolutionLocation, canvas.width, canvas.height);
 
     var colorLocation = gl.getUniformLocation(program, "u_color");
-    gl.uniform2f(resolutionLocation, canvas.width, canvas.height);
     this.colorLocation = colorLocation;
     this.gl = gl;
   },
@@ -162,12 +151,12 @@ var Viewport = React.createClass({
     var xRange = xMax - xMin;
     xMax = xMax + (bufferPercent * xRange);
     xMin = xMin - (bufferPercent * xRange);
-    var xScale = canvas.width / (xMax - xMin);
+    var xScale = 2 / (xMax - xMin);
 
     var yRange = yMax - yMin;
     yMax = yMax + (bufferPercent * yRange);
     yMin = yMin - (bufferPercent * yRange);
-    var yScale = canvas.height / (yMax - yMin);
+    var yScale = 2 / (yMax - yMin);
 
     var pts = [];
     var ptArrays = [];
@@ -184,8 +173,8 @@ var Viewport = React.createClass({
     console.log("IN mathy bits", yMin, yScale);
 
     while (i < xAxis.length) {
-      pts.push((xAxis[i] - xMin) * xScale);
-      pts.push((yAxis[i] - yMin) * yScale);
+      pts.push((xAxis[i] - xMin) * xScale - 1);
+      pts.push((yAxis[i] - yMin) * yScale - 1);
 
       normalIndices.push(i % maxPerArray);
 

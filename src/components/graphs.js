@@ -1,16 +1,18 @@
 var React = require('react');
 
-var ViewpointsGraph = require('./graph');
+var Graph = require('./graph');
 
 var Graphs = React.createClass({
 
   propTypes: {
+    axesClassName: React.PropTypes.string,
     className: React.PropTypes.string,
     columns: React.PropTypes.array,
     count: React.PropTypes.number,
     graphClassName: React.PropTypes.string,
     options: React.PropTypes.arrayOf(React.PropTypes.string),
-    rowClassName: React.PropTypes.string
+    rowClassName: React.PropTypes.string,
+    viewportClassName: React.PropTypes.string
   },
 
   render: function() {
@@ -27,10 +29,12 @@ var Graphs = React.createClass({
         rows[rowIndex] = [];
       }
       rows[rowIndex].push(
-        <ViewpointsGraph className={this.props.graphClassName}
+        <Graph axesClassName={this.props.axesClassName}
+            className={this.props.graphClassName}
             columns={this.props.columns}
             key={i}
-            options={this.props.options}/>
+            options={this.props.options}
+            viewportClassName={this.props.viewportClassName}/>
       );
     }
 
