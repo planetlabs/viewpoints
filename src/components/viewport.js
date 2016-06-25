@@ -37,6 +37,10 @@ var Viewport = React.createClass({
     this._prepareWebgl(canvas);
     this._setAxes(canvas);
     this._paint(canvas);
+
+    canvas.addEventListener('mousedown', this.mousedown);
+    canvas.addEventListener('mousemove', this.mousemove);
+    canvas.addEventListener('mouseup', this.mouseup);
   },
 
   componentDidUpdate: function() {
@@ -107,12 +111,9 @@ var Viewport = React.createClass({
     // To draw more than 65k vertices, we have to split up our
     // vertex arrays into smaller sub arrays, then render them
     // using drawElements separately.
-    // console.log("ptarrays", this.ptArrays);
-    // console.log("normal indices", this.normalIndicesArrays);
     for (var i = 0; i < this.ptArrays.length; i++) {
       var pts = this.ptArrays[i];
       var normalIndices = this.normalIndicesArrays[i];
-      // let highlightedIndices = highlightedIndicesArrays[i];
 
       // Default color
       var residualColor = 1;
@@ -206,9 +207,31 @@ var Viewport = React.createClass({
     this.ptArrays = ptArrays;
   },
 
+  mousedown: function(event) {
+    console.log("MOUSE DOWN");
+    this.mouseIsDown = true;
+    this.mouseDownX = event.offsetX;
+    this.mouseDownY = event.target.height - event.offsetY;
+
+    this.mouseUpX = this.mouseDownX;
+    this.mouseUpY = this.mouseDownY;
+  },
+
+  mousemove: function(event) {
+    console.log("MOUSE MOVE");
+  },
+
+  mouseup: function(event) {
+    console.log("MOUSE UP");
+  },
+
   render: function() {
+    var style = {
+      backgroundColor: "white"
+    };
     return (
       <canvas height={this.props.height}
+          style={style}
           width={this.props.width}>
         I am a viewport!
       </canvas>
