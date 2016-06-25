@@ -41,7 +41,7 @@ var Viewport = React.createClass({
 
   componentDidUpdate: function() {
     var canvas = ReactDOM.findDOMNode(this);
-    this._setAxes(canvas);
+    this.gl.viewport(0, 0, this.props.width, this.props.height);
     this._paint(canvas);
   },
 
@@ -85,7 +85,7 @@ var Viewport = React.createClass({
 
     // Draw background rectangle
     gl.blendFunc(gl.ONE, gl.ZERO);
-    Webgl.setRectangle(gl, 0, 0, canvas.width, canvas.height);
+    Webgl.setRectangle(gl, -1, -1, 2, 2);
     setColor(0, 0, 0, 1);
     gl.drawArrays(gl.TRIANGLES, 0, 6);
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
@@ -147,6 +147,7 @@ var Viewport = React.createClass({
       }
     }
 
+
     var bufferPercent = 0.05;
     var xRange = xMax - xMin;
     xMax = xMax + (bufferPercent * xRange);
@@ -168,9 +169,6 @@ var Viewport = React.createClass({
     var maxPerArray = 65530;
 
     var i = 0;
-
-    console.log("IN mathy bitsx", xMin, xScale);
-    console.log("IN mathy bits", yMin, yScale);
 
     while (i < xAxis.length) {
       pts.push((xAxis[i] - xMin) * xScale - 1);
