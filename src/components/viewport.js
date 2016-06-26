@@ -10,7 +10,19 @@ var Viewport = React.createClass({
     options: React.PropTypes.arrayOf(React.PropTypes.string),
     width: React.PropTypes.number,
     xAxisSelectedIndex: React.PropTypes.number,
-    yAxisSelectedIndex: React.PropTypes.number
+    yAxisSelectedIndex: React.PropTypes.number,
+  },
+
+  getInitialState() {
+    return {
+      mouseIsDown: false,
+      mouseDownX: 0,
+      mouseDownY: 0,
+      mouseUpX: 0,
+      mouseUpY: 0,
+      normalIndicesArrays: [],
+      highlightedIndicesArrays: []
+    };
   },
 
   vertexShader: `
@@ -49,6 +61,7 @@ var Viewport = React.createClass({
     this._paint(canvas);
   },
   componentWillReceiveProps(nextProps) {
+    console.log("will receive props");
     var canvas = ReactDOM.findDOMNode(this);
 
     if (this.props.xAxisSelectedIndex != nextProps.xAxisSelectedIndex ||
@@ -125,6 +138,23 @@ var Viewport = React.createClass({
       gl.drawElements(
           gl.POINTS, normalIndices.length, gl.UNSIGNED_SHORT, canvas.indexBuffer);
     }
+
+    // Draw the lines of the selection box
+    if (this.state.mouseIsDown) {
+      setColor(250, 80, 60, 1);
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+        this.state.mouseDownX, this.state.mouseDownY,
+        this.state.mouseDownX, this.state.mouseUpY,
+        this.state.mouseUpX, this.state.mouseDownY,
+        this.state.mouseUpX, this.state.mouseUpY]), gl.STATIC_DRAW);
+      gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array([
+        0, 1,
+        0, 2,
+        2, 3,
+        1, 3]), gl.STATIC_DRAW);
+      gl.drawElements(
+        gl.LINES, 8, gl.UNSIGNED_SHORT, canvas.indexBuffer);
+    }
   },
 
   _setAxes: function(canvas, indexX, indexY) {
@@ -172,9 +202,9 @@ var Viewport = React.createClass({
     var pts = [];
     var ptArrays = [];
     var normalIndices = [];
-    // var highlightedIndices = [];
-    var normalIndicesArrays = [];
-    // var highlightedIndicesArrays = [];
+    var highlightedIndices = [];
+    var normalIndicesArrays = []; //this.state.normalIndicesArrays;
+    var highlightedIndicesArrays = []; //this.state.highlightedIndicesArrays;
 
     var maxPerArray = 65530;
 
@@ -195,8 +225,8 @@ var Viewport = React.createClass({
           normalIndicesArrays.push(normalIndices);
           normalIndices = [];
 
-          // highlightedIndicesArrays.push(highlightedIndices);
-          // highlightedIndices = [];
+          highlightedIndicesArrays.push(highlightedIndices);
+          highlightedIndices = [];
       }
 
       if (i === xAxis.length) {
@@ -208,21 +238,42 @@ var Viewport = React.createClass({
   },
 
   mousedown: function(event) {
-    console.log("MOUSE DOWN");
-    this.mouseIsDown = true;
-    this.mouseDownX = event.offsetX;
-    this.mouseDownY = event.target.height - event.offsetY;
-
-    this.mouseUpX = this.mouseDownX;
-    this.mouseUpY = this.mouseDownY;
+    var x = (event.offsetX / this.props.width) * 2 - 1;
+    var y = ((event.target.height - event.offsetY) / this.props.height) * 2 - 1;
+    this.setState({
+      mouseIsDown: true,
+      mouseDownX: x,
+      mouseUpX: x,
+      mouseDownY: y,
+      mouseUpY: y
+    });
   },
 
   mousemove: function(event) {
-    console.log("MOUSE MOVE");
+    var x = (event.offsetX / this.props.width) * 2 - 1;
+    var y = ((event.target.height - event.offsetY) / this.props.height) * 2 - 1;
+    if (this.state.mouseIsDown === true) {
+      this.setState({
+        mouseUpX: x,
+        mouseUpY: y
+      });
+
+      // findHighlightedIndices(event.target);
+      // var windows = $(".viewport");
+      // _.each(windows, function(w) {
+      //     redraw(w);
+      // });
+    }
   },
 
   mouseup: function(event) {
-    console.log("MOUSE UP");
+    var x = (event.offsetX / this.props.width) * 2 - 1;
+    var y = ((event.target.height - event.offsetY) / this.props.height) * 2 - 1;
+    this.setState({
+      mouseIsDown: false,
+      mouseUpX: x,
+      mouseUpY: y
+    });
   },
 
   render: function() {
