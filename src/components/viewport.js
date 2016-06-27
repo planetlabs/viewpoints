@@ -127,6 +127,9 @@ var Viewport = React.createClass({
     // Draw the red (normal) points
     var residualColor = 1;
     setColor(255, residualColor, residualColor, 0.9);
+    if (this.props.normalIndicesArrays.length === 0) {
+      return;
+    }
     for (var i = 0; i < this.ptArrays.length; i++) {
       var pts = this.ptArrays[i];
       var normalIndices = this.props.normalIndicesArrays[i];

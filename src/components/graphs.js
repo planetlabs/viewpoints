@@ -2,6 +2,31 @@ var React = require('react');
 
 var Graph = require('./graph');
 
+function unselectAll(columnLength) {
+  var normalIndices = [];
+  var highlightedIndices = [];
+  var normalIndicesArrays = [];
+  var highlightedIndicesArrays = [];
+  var maxPerArray = 65530;
+
+  var i = 0;
+
+  while (i < columnLength) {
+    normalIndices.push(i % maxPerArray);
+
+    i++;
+
+    if (i % maxPerArray === 0 || i === columnLength) {
+        normalIndicesArrays.push(normalIndices);
+        normalIndices = [];
+
+        highlightedIndicesArrays.push(highlightedIndices);
+        highlightedIndices = [];
+    }
+  }
+  return [normalIndicesArrays, highlightedIndicesArrays];
+}
+
 var Graphs = React.createClass({
 
   propTypes: {
@@ -13,13 +38,66 @@ var Graphs = React.createClass({
     options: React.PropTypes.arrayOf(React.PropTypes.string),
     rowClassName: React.PropTypes.string,
     highlightFunction: React.PropTypes.func,
-    viewportClassName: React.PropTypes.string,
-    normalIndicesArrays: React.PropTypes.array,
-    highlightedIndicesArrays: React.PropTypes.array
+    viewportClassName: React.PropTypes.string
   },
 
-  componentWillReceiveProps(nextProps) {
-    // console.log("About to receive new columns:", nextProps.columns);
+  getInitialState() {
+    return {
+      highlightedIndicesArrays: [],
+      normalIndicesArrays: []
+    };
+  },
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.normalIndicesArrays.length === 0) {
+      var indicesArrays = unselectAll(this.props.columns[0].length);
+      this.setState({
+        normalIndicesArrays: indicesArrays[0],
+        highlightedIndicesArrays: indicesArrays[1]
+      });
+    }
+  },
+
+  _findSelectedIndices: function(ptArrays, xDown, xUp, yDown, yUp) {
+    var xMin = Math.min(xDown, xUp);
+    var xMax = Math.max(xDown, xUp);
+
+    var yMin = Math.min(yDown, yUp);
+    var yMax = Math.max(yDown, yUp);
+
+    var normalIndicesArrays = [];
+    var highlightedIndicesArrays = [];
+
+    var nCounts = 0;
+    var hCounts = 0;
+
+    for (var i = 0; i < ptArrays.length; i++) {
+      var pts = ptArrays[i];
+      var normalIndices = [];
+      var highlightedIndices = [];
+
+      for (var j = 0; j < pts.length; j+=2) {
+        var x = pts[j];
+        var y = pts[j+1];
+
+        if (x >= xMin && x <= xMax && y >= yMin && y <= yMax) {
+          highlightedIndices.push(j/2);
+          hCounts++;
+        }
+        else {
+          normalIndices.push(j/2);
+          nCounts++;
+        }
+      }
+
+      normalIndicesArrays.push(normalIndices);
+      highlightedIndicesArrays.push(highlightedIndices);
+    }
+
+    this.setState({
+      normalIndicesArrays: normalIndicesArrays,
+      highlightedIndicesArrays: highlightedIndicesArrays
+    });
   },
 
   render: function() {
@@ -41,9 +119,9 @@ var Graphs = React.createClass({
             columns={this.props.columns}
             key={i}
             options={this.props.options}
-            highlightFunction={this.props.highlightFunction}
-            normalIndicesArrays={this.props.normalIndicesArrays}
-            highlightedIndicesArrays={this.props.highlightedIndicesArrays}/>
+            highlightFunction={this._findSelectedIndices}
+            normalIndicesArrays={this.state.normalIndicesArrays}
+            highlightedIndicesArrays={this.state.highlightedIndicesArrays}/>
       );
     }
 
