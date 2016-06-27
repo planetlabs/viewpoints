@@ -48,6 +48,10 @@ var Graphs = React.createClass({
     };
   },
 
+  componentDidMount() {
+    window.addEventListener('keydown', this._keydown);
+  },
+
   componentDidUpdate(prevProps, prevState) {
     if (this.state.normalIndicesArrays.length === 0) {
       var indicesArrays = unselectAll(this.props.columns[0].length);
@@ -56,6 +60,20 @@ var Graphs = React.createClass({
         highlightedIndicesArrays: indicesArrays[1]
       });
     }
+  },
+
+  _keydown: function(event) {
+    // console.log("key event", event);
+    // console.log(this.state);
+    switch(event.which) {
+      case 73:
+        this.setState({
+          highlightedIndicesArrays: this.state.normalIndicesArrays,
+          normalIndicesArrays: this.state. highlightedIndicesArrays
+        });
+        break;
+    }
+    console.log(event.which);
   },
 
   _findSelectedIndices: function(ptArrays, xDown, xUp, yDown, yUp) {
