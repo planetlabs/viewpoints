@@ -12,7 +12,14 @@ var Graphs = React.createClass({
     graphClassName: React.PropTypes.string,
     options: React.PropTypes.arrayOf(React.PropTypes.string),
     rowClassName: React.PropTypes.string,
-    viewportClassName: React.PropTypes.string
+    highlightFunction: React.PropTypes.func,
+    viewportClassName: React.PropTypes.string,
+    normalIndicesArrays: React.PropTypes.array,
+    highlightedIndicesArrays: React.PropTypes.array
+  },
+
+  componentWillReceiveProps(nextProps) {
+    // console.log("About to receive new columns:", nextProps.columns);
   },
 
   render: function() {
@@ -34,7 +41,9 @@ var Graphs = React.createClass({
             columns={this.props.columns}
             key={i}
             options={this.props.options}
-            viewportClassName={this.props.viewportClassName}/>
+            highlightFunction={this.props.highlightFunction}
+            normalIndicesArrays={this.props.normalIndicesArrays}
+            highlightedIndicesArrays={this.props.highlightedIndicesArrays}/>
       );
     }
 

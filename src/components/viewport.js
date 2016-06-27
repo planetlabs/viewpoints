@@ -9,8 +9,11 @@ var Viewport = React.createClass({
     height: React.PropTypes.number,
     options: React.PropTypes.arrayOf(React.PropTypes.string),
     width: React.PropTypes.number,
+    highlightFunction: React.PropTypes.func,
     xAxisSelectedIndex: React.PropTypes.number,
     yAxisSelectedIndex: React.PropTypes.number,
+    normalIndicesArrays: React.PropTypes.array,
+    highlightedIndicesArrays: React.PropTypes.array
   },
 
   getInitialState() {
@@ -19,9 +22,7 @@ var Viewport = React.createClass({
       mouseDownX: 0,
       mouseDownY: 0,
       mouseUpX: 0,
-      mouseUpY: 0,
-      normalIndicesArrays: [],
-      highlightedIndicesArrays: []
+      mouseUpY: 0
     };
   },
 
@@ -61,7 +62,6 @@ var Viewport = React.createClass({
     this._paint(canvas);
   },
   componentWillReceiveProps(nextProps) {
-    console.log("will receive props");
     var canvas = ReactDOM.findDOMNode(this);
 
     if (this.props.xAxisSelectedIndex != nextProps.xAxisSelectedIndex ||
@@ -102,7 +102,6 @@ var Viewport = React.createClass({
   },
 
   _paint: function(canvas) {
-    console.log('painting');
     var gl = this.gl;
     var colorLocation = this.colorLocation;
     function setColor(r, g, b, a) {
@@ -124,19 +123,48 @@ var Viewport = React.createClass({
     // To draw more than 65k vertices, we have to split up our
     // vertex arrays into smaller sub arrays, then render them
     // using drawElements separately.
+
+    // Draw the red (normal) points
+    var residualColor = 1;
+    setColor(255, residualColor, residualColor, 0.9);
     for (var i = 0; i < this.ptArrays.length; i++) {
       var pts = this.ptArrays[i];
-      var normalIndices = this.normalIndicesArrays[i];
+      var normalIndices = this.props.normalIndicesArrays[i];
 
-      // Default color
-      var residualColor = 1;
-      setColor(255, residualColor, residualColor, 0.9);
 
       Webgl.setPoints(gl, pts);
 
       gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(normalIndices), gl.STATIC_DRAW);
       gl.drawElements(
           gl.POINTS, normalIndices.length, gl.UNSIGNED_SHORT, canvas.indexBuffer);
+    }
+
+    // Set pen to black and clear the spots that were already red
+    gl.blendFunc(gl.ONE, gl.ZERO);
+    setColor(0, 0, 0, 1);
+    for (var i = 0; i < this.ptArrays.length; i++) {
+      var pts = this.ptArrays[i];
+      var highlightedIndices = this.props.highlightedIndicesArrays[i];
+
+      Webgl.setPoints(gl, pts);
+
+      gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(highlightedIndices), gl.STATIC_DRAW);
+      gl.drawElements(
+          gl.POINTS, highlightedIndices.length, gl.UNSIGNED_SHORT, canvas.indexBuffer);
+    }
+
+    // Set the pen to blue and draw the highlighted points
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
+    setColor(residualColor, residualColor, 255, 0.9);
+    for (var i = 0; i < this.ptArrays.length; i++) {
+      var pts = this.ptArrays[i];
+      var highlightedIndices = this.props.highlightedIndicesArrays[i];
+
+      Webgl.setPoints(gl, pts);
+
+      gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(highlightedIndices), gl.STATIC_DRAW);
+      gl.drawElements(
+          gl.POINTS, highlightedIndices.length, gl.UNSIGNED_SHORT, canvas.indexBuffer);
     }
 
     // Draw the lines of the selection box
@@ -201,10 +229,6 @@ var Viewport = React.createClass({
 
     var pts = [];
     var ptArrays = [];
-    var normalIndices = [];
-    var highlightedIndices = [];
-    var normalIndicesArrays = []; //this.state.normalIndicesArrays;
-    var highlightedIndicesArrays = []; //this.state.highlightedIndicesArrays;
 
     var maxPerArray = 65530;
 
@@ -214,26 +238,14 @@ var Viewport = React.createClass({
       pts.push((xAxis[i] - xMin) * xScale - 1);
       pts.push((yAxis[i] - yMin) * yScale - 1);
 
-      normalIndices.push(i % maxPerArray);
-
       i++;
 
       if (i % maxPerArray === 0 || i === xAxis.length) {
           ptArrays.push(pts);
           pts = [];
-
-          normalIndicesArrays.push(normalIndices);
-          normalIndices = [];
-
-          highlightedIndicesArrays.push(highlightedIndices);
-          highlightedIndices = [];
-      }
-
-      if (i === xAxis.length) {
-          break;
       }
     }
-    this.normalIndicesArrays = normalIndicesArrays;
+
     this.ptArrays = ptArrays;
   },
 
@@ -253,16 +265,15 @@ var Viewport = React.createClass({
     var x = (event.offsetX / this.props.width) * 2 - 1;
     var y = ((event.target.height - event.offsetY) / this.props.height) * 2 - 1;
     if (this.state.mouseIsDown === true) {
+      this.props.highlightFunction(
+        this.ptArrays,
+        this.state.mouseDownX, x,
+        this.state.mouseDownY, y);
+
       this.setState({
         mouseUpX: x,
         mouseUpY: y
       });
-
-      // findHighlightedIndices(event.target);
-      // var windows = $(".viewport");
-      // _.each(windows, function(w) {
-      //     redraw(w);
-      // });
     }
   },
 

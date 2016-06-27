@@ -10,7 +10,10 @@ var Graph = React.createClass({
     className: React.PropTypes.string,
     columns: React.PropTypes.array,
     options: React.PropTypes.arrayOf(React.PropTypes.string),
-    viewportClassName: React.PropTypes.string
+    highlightFunction: React.PropTypes.func,
+    viewportClassName: React.PropTypes.string,
+    normalIndicesArrays: React.PropTypes.array,
+    highlightedIndicesArrays: React.PropTypes.array
   },
 
   getInitialState: function() {
@@ -65,6 +68,9 @@ var Graph = React.createClass({
             height={this.state.viewportHeight}
             options={this.props.options}
             width={this.state.viewportWidth}
+            highlightFunction={this.props.highlightFunction}
+            normalIndicesArrays={this.props.normalIndicesArrays}
+            highlightedIndicesArrays={this.props.highlightedIndicesArrays}
             xAxisSelectedIndex={this.state.xAxisSelectedIndex}
             yAxisSelectedIndex={this.state.yAxisSelectedIndex}/>
       </div>
