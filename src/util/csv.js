@@ -1,5 +1,6 @@
 
 function processCsv(data) {
+  var start = new Date().getTime();
   /*
         Given a csv file as a big string blob, parse
         it by interpreting the first line as the title
@@ -13,7 +14,7 @@ function processCsv(data) {
   titles = titles.split(',');
 
   var enums = titles.map(function() {
-    return [];
+    return new Map();
   });
 
   // TODO: figure out how to parse files that have a bunch of unique strings.
@@ -33,13 +34,14 @@ function processCsv(data) {
       if (isNaN(parsed)) {
         // It was a string. Let's see, is this
         // string already interned?
-        var location = enums[j].indexOf(val);
-        if (location != -1) {
+        var location = enums[j].get(val);
+        if (typeof location !== 'undefined') {
           val = location;
         }
         else {
-          enums[j].push(val);
-          val = enums[j].length;
+          var proxyVal = enums[j].size;
+          enums[j].set(val, proxyVal);
+          val = proxyVal;
         }
       }
       else {
@@ -59,6 +61,9 @@ function processCsv(data) {
     columns.push(column);
   }
 
+  var end = new Date().getTime();
+  var time = end - start;
+  console.log("csv parse took: ", time);
   return {
     'titles': titles,
     'columns': columns
