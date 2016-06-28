@@ -63,7 +63,6 @@ var Viewport = React.createClass({
   },
   componentWillReceiveProps(nextProps) {
     var canvas = ReactDOM.findDOMNode(this);
-
     if (this.props.xAxisSelectedIndex != nextProps.xAxisSelectedIndex ||
         this.props.yAxisSelectedIndex != nextProps.yAxisSelectedIndex) {
       this._setAxes(
@@ -188,9 +187,9 @@ var Viewport = React.createClass({
     }
   },
 
-  _setAxes: function(canvas, indexX, indexY) {
-    var xAxis = this.props.columns[indexX || this.props.xAxisSelectedIndex];
-    var yAxis = this.props.columns[indexY || this.props.yAxisSelectedIndex];
+  _setAxes: function(canvas, indexX = this.props.xAxisSelectedIndex, indexY = this.props.yAxisSelectedIndex) {
+    var xAxis = this.props.columns[indexX];
+    var yAxis = this.props.columns[indexY];
 
     var xMax = null;
     var xMin = null;
