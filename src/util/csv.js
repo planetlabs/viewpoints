@@ -5,9 +5,9 @@ function processCsv(data) {
         it by interpreting the first line as the title
         line, then the following lines as data rows
         which are comma separated. Return a dictionary
-        which contains 'titles' and 'rows" keys.
+        which contains 'titles' and 'rows' keys.
    */
-  var rows = data.split('\n');
+  var rows = data.trim().split('\n');
   var columns = [];
   var titles = rows.splice(0, 1)[0];
   titles = titles.split(',');
