@@ -31,7 +31,7 @@ var Viewport = React.createClass({
 
     void main() {
        gl_Position = vec4(a_position, 0, 1);
-       gl_PointSize = 2.0;
+       gl_PointSize = 1.0;
     }
   `,
 
@@ -56,10 +56,16 @@ var Viewport = React.createClass({
     canvas.addEventListener('mouseup', this.mouseup);
   },
 
-  componentDidUpdate: function() {
+  componentDidUpdate: function(prevProps, prevState) {
     var canvas = ReactDOM.findDOMNode(this);
     this.gl.viewport(0, 0, this.props.width, this.props.height);
-    this._paint(canvas);
+    if (this.props.columns !== prevProps.columns) {
+      this._setAxes(canvas);
+    }
+    else {
+      this._paint(canvas);
+
+    }
   },
   componentWillReceiveProps(nextProps) {
     var canvas = ReactDOM.findDOMNode(this);

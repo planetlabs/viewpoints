@@ -25,6 +25,18 @@ var Graph = React.createClass({
     };
   },
 
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.viewportWidth !== this.refs.viewport.offsetWidth ||
+        prevState.viewportHeight !== this.refs.viewport.offsetHeight) {
+
+      this.setState({
+        viewportHeight: this.refs.viewport.offsetHeight,
+        viewportWidth: this.refs.viewport.offsetWidth
+      });
+    }
+
+  },
+
   componentDidMount: function() {
     this._onResize();
     window.addEventListener('resize', this._onResize);

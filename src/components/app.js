@@ -35,6 +35,12 @@ var App = React.createClass({
     this.setState({graphCount: this.state.graphCount + 1});
   },
 
+  _onColumnsChanged: function(newColumns) {
+    this.setState({
+      columns: newColumns
+    });
+  },
+
   render: function() {
     return (
       <div className="vp-app">
@@ -50,7 +56,8 @@ var App = React.createClass({
         </div>
         <Graphs columns={this.state.columns}
             count={this.state.graphCount}
-            options={this.state.options}/>
+            options={this.state.options}
+            onColumnsChanged={this._onColumnsChanged}/>
       </div>);
   }
 });

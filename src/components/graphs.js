@@ -2,12 +2,14 @@ var React = require('react');
 
 var Graph = require('./graph');
 
+var maxPerArray = 65530;
+
+
 function unselectAll(columnLength) {
   var normalIndices = [];
   var highlightedIndices = [];
   var normalIndicesArrays = [];
   var highlightedIndicesArrays = [];
-  var maxPerArray = 65530;
 
   var i = 0;
 
@@ -38,7 +40,8 @@ var Graphs = React.createClass({
     options: React.PropTypes.arrayOf(React.PropTypes.string),
     rowClassName: React.PropTypes.string,
     highlightFunction: React.PropTypes.func,
-    viewportClassName: React.PropTypes.string
+    viewportClassName: React.PropTypes.string,
+    onColumnsChanged: React.PropTypes.func
   },
 
   getInitialState() {
@@ -63,17 +66,49 @@ var Graphs = React.createClass({
   },
 
   _keydown: function(event) {
-    // console.log("key event", event);
-    // console.log(this.state);
     switch(event.which) {
       case 73:
         this.setState({
           highlightedIndicesArrays: this.state.normalIndicesArrays,
-          normalIndicesArrays: this.state. highlightedIndicesArrays
+          normalIndicesArrays: this.state.highlightedIndicesArrays
         });
+        break;
+      case 88:
+        this._deleteHighlighted();
         break;
     }
     console.log(event.which);
+  },
+
+  _deleteHighlighted: function() {
+    var totalHighlighted = 0;
+    for (var a = 0; a < this.state.highlightedIndicesArrays.length; a++) {
+      var highlightedIndices = this.state.highlightedIndicesArrays[a];
+      totalHighlighted += highlightedIndices.length;
+    }
+
+    var newColumns = [];
+    for (var c = 0; c < this.props.columns.length; c++) {
+      var oldColumn = this.props.columns[c];
+      var newColumn = [];
+      for (var i = 0; i < this.state.normalIndicesArrays.length; i++) {
+        var normalIndices = this.state.normalIndicesArrays[i];
+
+        for (var j = 0; j < normalIndices.length; j++) {
+          newColumn.push(oldColumn[normalIndices[j] + i * maxPerArray]);
+        }
+      }
+      newColumns.push(newColumn);
+    }
+
+    var exampleCol = this.props.columns[0];
+    var newIndices = unselectAll(newColumns[0].length);
+
+    this.props.onColumnsChanged(newColumns);
+    this.setState({
+      normalIndicesArrays: newIndices[0],
+      highlightedIndicesArrays: newIndices[1]
+    })
   },
 
   _findSelectedIndices: function(ptArrays, xDown, xUp, yDown, yUp) {
