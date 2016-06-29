@@ -4,7 +4,7 @@
 # To Run:
 
 ```
-git clone https://github.com/MattFerraro/viewpoints2.git
+git clone https://github.com/MattFerraro/viewpoints.git
 cd viewpoints
 npm install
 npm start
