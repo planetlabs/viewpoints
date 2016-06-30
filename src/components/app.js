@@ -2,7 +2,9 @@ var React = require('react');
 
 var Graphs = require('./graphs');
 
-var processCsv = require('../util/csv');
+// var rowsToColumns = require('../util/csv');
+
+var Papa = require('papaparse');
 
 var App = React.createClass({
 
@@ -15,18 +17,49 @@ var App = React.createClass({
   },
 
   _onUploadChange: function(event) {
-    var reader = new FileReader();
-    reader.onload = this._onReaderLoad;
-    reader.readAsText(event.target.files[0]);
+    var start = new Date().getTime();
+
+    var headings = [];
+    var columns = [];
+
+    var config = {
+      header: false,
+      dynamicTyping: true,
+      chunk: function(dat) {
+        if (headings.length === 0) {
+          headings = dat.data.shift();
+          console.log("grabbed headings");
+          console.log(headings);
+
+          columns = headings.map(function(x) {
+            return [];
+          });
+        }
+
+        for (var j = 0; j < dat.data.length; j++) {
+          for (var i = 0; i < columns.length; i++) {
+            columns[i].push(dat.data[j][i]);
+          }
+        }
+
+        var end = new Date().getTime();
+        var time = end - start;
+        console.log("csv parse took: ", time);
+      },
+      complete: function() {
+        console.log("read in ", columns[0].length);
+        this._onReaderLoad(headings, columns);
+      }.bind(this),
+      skipEmptyLines: true,
+    };
+
+    Papa.parse(event.target.files[0], config);
   },
 
-  _onReaderLoad: function(event) {
-    var parsed = processCsv(event.target.result);
-    console.log('parsed.');
-
+  _onReaderLoad: function(headings, columns) {
     this.setState({
-      options: parsed.titles,
-      columns: parsed.columns,
+      options: headings,
+      columns: columns,
       graphCount: 1
     });
   },

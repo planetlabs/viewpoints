@@ -1,5 +1,115 @@
+function rowsToColumns(rows) {
+  var cols = rows[0].map(function() {
+    return new Map();
+  });
+}
+
+
+var headings = [];
+var isNumeric = [];
+var columns = [];
+
+function parseFile(file, callback) {
+  var fileSize   = file.size;
+  var chunkSize  = 1 * 1024 * 1024; // bytes
+  var offset     = 0;
+  var self       = this; // we need a reference to the current object
+  var chunkReaderBlock = null;
+  var residual = "";
+  // var accumulator = "";
+
+  var readEventHandler = function(evt) {
+    // console.log("in read event handler");
+    if (evt.target.error == null) {
+      // console.log("no error");
+      offset += evt.target.result.length;
+      // accumulator += evt.target.result;
+      residual = processCsv(residual + evt.target.result);
+      // callback(evt.target.result); // callback for handling read chunk
+    } else {
+      console.log("Read error: " + evt.target.error);
+      return;
+    }
+    if (offset >= fileSize) {
+      console.log("Done reading file");
+      // console.log(accumulator.length);
+      callback(headings, columns);
+      return;
+    }
+
+    // of to the next chunk
+    chunkReaderBlock(offset, chunkSize, file);
+  }
+
+  chunkReaderBlock = function(_offset, length, _file) {
+    var r = new FileReader();
+    var blob = _file.slice(_offset, length + _offset);
+    r.onload = readEventHandler;
+    r.readAsText(blob);
+  }
+
+  // now let's start the read with the first block
+  chunkReaderBlock(offset, chunkSize, file);
+}
 
 function processCsv(data) {
+  if (headings.length === 0) {
+    // console.log("initializing the headings");
+    var firstNewlineLocation = data.indexOf('\n');
+    var headingsLine = data.slice(0, firstNewlineLocation);
+    headings = headingsLine.split(',');
+    console.log("headings", headings);
+    var data = data.slice(firstNewlineLocation+1);
+
+    var typesLine = data.slice(0, data.indexOf('\n'));
+    var typesArray = typesLine.split(',');
+    console.log("types array", typesArray);
+
+    for (var i = 0; i < typesArray.length; i++) {
+      var parsed = parseFloat(typesArray[i]);
+      if (isNaN(parsed)) {
+        var isFloat = false;
+      }
+      else {
+        var isFloat = true;
+      }
+      isNumeric.push(isFloat);
+    }
+    console.log("is numeric", isNumeric);
+  }
+  else {
+    console.log("processing the csv incrementally");
+    var startIndex = 0;
+    var stopIndex = data.indexOf('\n', startIndex);
+    while (true) {
+      var line = data.slice(startIndex, stopIndex);
+      startIndex = stopIndex;
+      stopIndex = data.indexOf('\n', stopIndex + 1);
+
+      var lineSplit = line.split(',');
+      if (lineSplit.length !== headings.length) {
+        console.log("WHOA, NOT EQUAL IN LENGTH");
+        console.log(lineSplit.length, "vs", headings.length);
+      }
+
+      if (stopIndex === -1) {
+        break;
+      }
+    }
+
+    var residual = data.slice(startIndex);
+    console.log("residual", residual, '\n');
+
+    // find the number of good lines we have and read/parse them and accumulate them
+    // any extra chars? send those back
+    // console.log("calling processCSV with data", data.length);
+  }
+  return residual;
+}
+
+
+function processCsv2(data) {
+  console.log("Raw data length:", data.length);
   var start = new Date().getTime();
   /*
         Given a csv file as a big string blob, parse
@@ -8,7 +118,14 @@ function processCsv(data) {
         which are comma separated. Return a dictionary
         which contains 'titles' and 'rows' keys.
    */
-  var rows = data.trim().split('\n');
+  data = data.trim();
+  console.log("after trim");
+
+  var rows = data.split('\n');
+  console.log("rows length:", rows.length);
+  if (rows.length === 1) {
+    console.log(rows);
+  }
   var columns = [];
   var titles = rows.splice(0, 1)[0];
   titles = titles.split(',');
@@ -70,4 +187,4 @@ function processCsv(data) {
   };
 }
 
-module.exports = processCsv;
+module.exports = rowsToColumns;
