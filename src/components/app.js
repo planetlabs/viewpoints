@@ -2,7 +2,7 @@ var React = require('react');
 
 var Graphs = require('./graphs');
 
-// var rowsToColumns = require('../util/csv');
+var intern = require('../util/csv');
 
 var Papa = require('papaparse');
 
@@ -12,6 +12,7 @@ var App = React.createClass({
     return {
       columns: [],
       options: [],
+      enums: [],
       graphCount: 0
     };
   },
@@ -21,6 +22,7 @@ var App = React.createClass({
 
     var headings = [];
     var columns = [];
+    var enums = [];
 
     var config = {
       header: false,
@@ -48,7 +50,14 @@ var App = React.createClass({
       },
       complete: function() {
         console.log("read in ", columns[0].length);
-        this._onReaderLoad(headings, columns);
+
+        for (var i = 0; i < columns.length; i++) {
+          var newCol = intern(columns[i]);
+          columns[i] = newCol.newColumn;
+          enums.push(enums);
+        }
+
+        this._onReaderLoad(headings, columns, enums);
       }.bind(this),
       skipEmptyLines: true,
     };
@@ -56,10 +65,11 @@ var App = React.createClass({
     Papa.parse(event.target.files[0], config);
   },
 
-  _onReaderLoad: function(headings, columns) {
+  _onReaderLoad: function(headings, columns, enums) {
     this.setState({
       options: headings,
       columns: columns,
+      enums: enums,
       graphCount: 1
     });
   },
