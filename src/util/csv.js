@@ -42,3 +42,5 @@ function intern(column) {
     errors: errors
   };
 }
+
+module.exports = intern;
