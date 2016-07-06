@@ -252,7 +252,7 @@ var Viewport = React.createClass({
       i++;
 
       if (i % maxPerArray === 0 || i === xAxis.length) {
-          ptArrays.push(pts);
+          ptArrays.push(new Float32Array(pts));
           pts = [];
       }
     }

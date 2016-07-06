@@ -140,7 +140,7 @@ function setRectangle(gl, x, y, width, height) {
 }
 
 function setVertexBuffer(gl, pts) {
-  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(pts), gl.STATIC_DRAW);
+  gl.bufferData(gl.ARRAY_BUFFER, pts, gl.STATIC_DRAW);
 }
 
 function setIndexBuffer(gl, pts) {
