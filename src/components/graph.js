@@ -13,7 +13,8 @@ var Graph = React.createClass({
     highlightFunction: React.PropTypes.func,
     viewportClassName: React.PropTypes.string,
     normalIndicesArrays: React.PropTypes.array,
-    highlightedIndicesArrays: React.PropTypes.array
+    highlightedIndicesArrays: React.PropTypes.array,
+    uid: React.PropTypes.number
   },
 
   getInitialState: function() {
@@ -34,7 +35,6 @@ var Graph = React.createClass({
         viewportWidth: this.refs.viewport.offsetWidth
       });
     }
-
   },
 
   componentDidMount: function() {
@@ -80,6 +80,7 @@ var Graph = React.createClass({
             height={this.state.viewportHeight}
             options={this.props.options}
             width={this.state.viewportWidth}
+            uid={this.props.uid}
             highlightFunction={this.props.highlightFunction}
             normalIndicesArrays={this.props.normalIndicesArrays}
             highlightedIndicesArrays={this.props.highlightedIndicesArrays}

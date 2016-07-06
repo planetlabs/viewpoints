@@ -13,7 +13,8 @@ var Viewport = React.createClass({
     xAxisSelectedIndex: React.PropTypes.number,
     yAxisSelectedIndex: React.PropTypes.number,
     normalIndicesArrays: React.PropTypes.array,
-    highlightedIndicesArrays: React.PropTypes.array
+    highlightedIndicesArrays: React.PropTypes.array,
+    uid: React.PropTypes.number
   },
 
   getInitialState() {
@@ -22,7 +23,7 @@ var Viewport = React.createClass({
       mouseDownX: 0,
       mouseDownY: 0,
       mouseUpX: 0,
-      mouseUpY: 0
+      mouseUpY: 0,
     };
   },
 
@@ -31,7 +32,7 @@ var Viewport = React.createClass({
 
     void main() {
        gl_Position = vec4(a_position, 0, 1);
-       gl_PointSize = 1.0;
+       gl_PointSize = 2.0;
     }
   `,
 
@@ -62,9 +63,8 @@ var Viewport = React.createClass({
     if (this.props.columns !== prevProps.columns) {
       this._setAxes(canvas);
     }
-    else {
+    else if (this.state.mouseUpX === prevState.mouseUpX && this.state.mouseUpY === prevState.mouseUpY) {
       this._paint(canvas);
-
     }
   },
   componentWillReceiveProps(nextProps) {
@@ -98,8 +98,6 @@ var Viewport = React.createClass({
     gl.enableVertexAttribArray(positionLocation);
     gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
     // set the resolution
-    // var resolutionLocation = gl.getUniformLocation(program, "u_resolution");
-    // gl.uniform2f(resolutionLocation, canvas.width, canvas.height);
 
     var colorLocation = gl.getUniformLocation(program, "u_color");
     this.colorLocation = colorLocation;
@@ -130,7 +128,7 @@ var Viewport = React.createClass({
     // using drawElements separately.
 
     // Draw the red (normal) points
-    var residualColor = 1;
+    var residualColor = 3;
     setColor(255, residualColor, residualColor, 0.9);
     if (this.props.normalIndicesArrays.length === 0) {
       return;
@@ -139,10 +137,11 @@ var Viewport = React.createClass({
       var pts = this.ptArrays[i];
       var normalIndices = this.props.normalIndicesArrays[i];
 
+      Webgl.setVertexBuffer(gl, pts);
 
-      Webgl.setPoints(gl, pts);
+      // gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(normalIndices), gl.STATIC_DRAW);
+      Webgl.setIndexBuffer(gl, normalIndices);
 
-      gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(normalIndices), gl.STATIC_DRAW);
       gl.drawElements(
           gl.POINTS, normalIndices.length, gl.UNSIGNED_SHORT, canvas.indexBuffer);
     }
@@ -154,9 +153,11 @@ var Viewport = React.createClass({
       var pts = this.ptArrays[i];
       var highlightedIndices = this.props.highlightedIndicesArrays[i];
 
-      Webgl.setPoints(gl, pts);
+      Webgl.setVertexBuffer(gl, pts);
 
-      gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(highlightedIndices), gl.STATIC_DRAW);
+      // gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(highlightedIndices), gl.STATIC_DRAW);
+      Webgl.setIndexBuffer(gl, highlightedIndices);
+
       gl.drawElements(
           gl.POINTS, highlightedIndices.length, gl.UNSIGNED_SHORT, canvas.indexBuffer);
     }
@@ -168,9 +169,10 @@ var Viewport = React.createClass({
       var pts = this.ptArrays[i];
       var highlightedIndices = this.props.highlightedIndicesArrays[i];
 
-      Webgl.setPoints(gl, pts);
+      Webgl.setVertexBuffer(gl, pts);
 
-      gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(highlightedIndices), gl.STATIC_DRAW);
+      // gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(highlightedIndices), gl.STATIC_DRAW);
+      Webgl.setIndexBuffer(gl, highlightedIndices);
       gl.drawElements(
           gl.POINTS, highlightedIndices.length, gl.UNSIGNED_SHORT, canvas.indexBuffer);
     }
@@ -191,6 +193,7 @@ var Viewport = React.createClass({
       gl.drawElements(
         gl.LINES, 8, gl.UNSIGNED_SHORT, canvas.indexBuffer);
     }
+    console.log("painted on canvas", this.props.uid);
   },
 
   _setAxes: function(canvas, indexX = this.props.xAxisSelectedIndex, indexY = this.props.yAxisSelectedIndex) {
@@ -273,15 +276,15 @@ var Viewport = React.createClass({
     var x = (event.offsetX / this.props.width) * 2 - 1;
     var y = ((event.target.height - event.offsetY) / this.props.height) * 2 - 1;
     if (this.state.mouseIsDown === true) {
-      this.props.highlightFunction(
-        this.ptArrays,
-        this.state.mouseDownX, x,
-        this.state.mouseDownY, y);
-
       this.setState({
         mouseUpX: x,
         mouseUpY: y
       });
+
+      this.props.highlightFunction(
+        this.ptArrays,
+        this.state.mouseDownX, x,
+        this.state.mouseDownY, y);
     }
   },
 

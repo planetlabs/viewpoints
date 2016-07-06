@@ -19,10 +19,10 @@ function unselectAll(columnLength) {
     i++;
 
     if (i % maxPerArray === 0 || i === columnLength) {
-        normalIndicesArrays.push(normalIndices);
+        normalIndicesArrays.push(new Uint16Array(normalIndices));
         normalIndices = [];
 
-        highlightedIndicesArrays.push(highlightedIndices);
+        highlightedIndicesArrays.push(new Uint16Array(highlightedIndices));
         highlightedIndices = [];
     }
   }
@@ -112,6 +112,7 @@ var Graphs = React.createClass({
   },
 
   _findSelectedIndices: function(ptArrays, xDown, xUp, yDown, yUp) {
+    console.log("finding highlighted");
     var xMin = Math.min(xDown, xUp);
     var xMax = Math.max(xDown, xUp);
 
@@ -143,8 +144,9 @@ var Graphs = React.createClass({
         }
       }
 
-      normalIndicesArrays.push(normalIndices);
-      highlightedIndicesArrays.push(highlightedIndices);
+      normalIndicesArrays.push(new Uint16Array(normalIndices));
+      highlightedIndicesArrays.push(new Uint16Array(highlightedIndices));
+
     }
 
     this.setState({
@@ -171,6 +173,7 @@ var Graphs = React.createClass({
             className={this.props.graphClassName}
             columns={this.props.columns}
             key={i}
+            uid={i}
             options={this.props.options}
             highlightFunction={this._findSelectedIndices}
             normalIndicesArrays={this.state.normalIndicesArrays}

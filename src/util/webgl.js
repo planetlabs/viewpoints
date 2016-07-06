@@ -139,14 +139,19 @@ function setRectangle(gl, x, y, width, height) {
      x2, y2]), gl.STATIC_DRAW);
 }
 
-function setPoints(gl, pts) {
+function setVertexBuffer(gl, pts) {
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(pts), gl.STATIC_DRAW);
+}
+
+function setIndexBuffer(gl, pts) {
+  gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, pts, gl.STATIC_DRAW);
 }
 
 
 module.exports = {
-    initWebGL: initWebGL,
-    createProgramFromScripts, createProgramFromScripts,
-    setRectangle: setRectangle,
-    setPoints: setPoints,
+  initWebGL: initWebGL,
+  createProgramFromScripts: createProgramFromScripts,
+  setRectangle: setRectangle,
+  setVertexBuffer: setVertexBuffer,
+  setIndexBuffer: setIndexBuffer
 }

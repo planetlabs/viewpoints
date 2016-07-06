@@ -70,7 +70,7 @@ var App = React.createClass({
       options: headings,
       columns: columns,
       enums: enums,
-      graphCount: 1
+      graphCount: 4
     });
   },
 
