@@ -10,6 +10,7 @@ Try it out [live!](https://mattferraro.github.io/viewpoints/)
 ```
 git clone https://github.com/MattFerraro/viewpoints.git
 cd viewpoints
+export NODE_ENV=production    # optional, but makes it run faster
 npm install
 npm start
 ```
