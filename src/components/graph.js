@@ -9,12 +9,12 @@ var Graph = React.createClass({
     axesClassName: React.PropTypes.string,
     className: React.PropTypes.string,
     columns: React.PropTypes.array,
-    options: React.PropTypes.arrayOf(React.PropTypes.string),
     highlightFunction: React.PropTypes.func,
-    viewportClassName: React.PropTypes.string,
-    normalIndicesArrays: React.PropTypes.array,
     highlightedIndicesArrays: React.PropTypes.array,
-    uid: React.PropTypes.number
+    normalIndicesArrays: React.PropTypes.array,
+    options: React.PropTypes.arrayOf(React.PropTypes.string),
+    uid: React.PropTypes.number,
+    viewportClassName: React.PropTypes.string
   },
 
   getInitialState: function() {
@@ -78,12 +78,12 @@ var Graph = React.createClass({
         <div className={this.props.viewportClassName || 'vp-graph-viewport'} ref="viewport"/>
         <Viewport columns={this.props.columns}
             height={this.state.viewportHeight}
-            options={this.props.options}
-            width={this.state.viewportWidth}
-            uid={this.props.uid}
             highlightFunction={this.props.highlightFunction}
-            normalIndicesArrays={this.props.normalIndicesArrays}
             highlightedIndicesArrays={this.props.highlightedIndicesArrays}
+            normalIndicesArrays={this.props.normalIndicesArrays}
+            options={this.props.options}
+            uid={this.props.uid}
+            width={this.state.viewportWidth}
             xAxisSelectedIndex={this.state.xAxisSelectedIndex}
             yAxisSelectedIndex={this.state.yAxisSelectedIndex}/>
       </div>
