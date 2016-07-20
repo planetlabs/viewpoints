@@ -1,6 +1,7 @@
 var React = require('react');
 
 var Graphs = require('./graphs');
+var Sidebar = require('./sidebar');
 
 var intern = require('../util/csv');
 
@@ -13,12 +14,12 @@ var App = React.createClass({
       columns: [],
       options: [],
       enums: [],
-      graphCount: 0
+      graphCount: 0,
+      pointSize: 2
     };
   },
 
   _onUploadChange: function(event) {
-    var start = new Date().getTime();
 
     var headings = [];
     var columns = [];
@@ -30,8 +31,6 @@ var App = React.createClass({
       chunk: function(dat) {
         if (headings.length === 0) {
           headings = dat.data.shift();
-          console.log("grabbed headings");
-          console.log(headings);
 
           columns = headings.map(function(x) {
             return [];
@@ -43,14 +42,8 @@ var App = React.createClass({
             columns[i].push(dat.data[j][i]);
           }
         }
-
-        var end = new Date().getTime();
-        var time = end - start;
-        console.log("csv parse took: ", time);
       },
       complete: function() {
-        console.log("read in ", columns[0].length);
-
         for (var i = 0; i < columns.length; i++) {
           var newCol = intern(columns[i]);
           columns[i] = newCol.newColumn;
@@ -59,7 +52,7 @@ var App = React.createClass({
 
         this._onReaderLoad(headings, columns, enums);
       }.bind(this),
-      skipEmptyLines: true,
+      skipEmptyLines: true
     };
 
     Papa.parse(event.target.files[0], config);
@@ -84,6 +77,10 @@ var App = React.createClass({
     });
   },
 
+  _onPointSizeChange: function(pointSize) {
+    this.setState({pointSize: pointSize});
+  },
+
   render: function() {
     return (
       <div className="vp-app">
@@ -97,10 +94,15 @@ var App = React.createClass({
             Add graph
           </div>}
         </div>
-        <Graphs columns={this.state.columns}
-            count={this.state.graphCount}
-            options={this.state.options}
-            onColumnsChanged={this._onColumnsChanged}/>
+        <div className="vp-content">
+          <Graphs columns={this.state.columns}
+              count={this.state.graphCount}
+              onColumnsChanged={this._onColumnsChanged}
+              options={this.state.options}
+              pointSize={this.state.pointSize}/>
+          <Sidebar onPointSizeChange={this._onPointSizeChange}
+              pointSize={this.state.pointSize}/>
+        </div>
       </div>);
   }
 });

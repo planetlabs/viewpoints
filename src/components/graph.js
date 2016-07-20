@@ -13,6 +13,7 @@ var Graph = React.createClass({
     highlightedIndicesArrays: React.PropTypes.array,
     normalIndicesArrays: React.PropTypes.array,
     options: React.PropTypes.arrayOf(React.PropTypes.string),
+    pointSize: React.PropTypes.number,
     uid: React.PropTypes.number,
     viewportClassName: React.PropTypes.string
   },
@@ -83,6 +84,7 @@ var Graph = React.createClass({
             highlightedIndicesArrays={this.props.highlightedIndicesArrays}
             normalIndicesArrays={this.props.normalIndicesArrays}
             options={this.props.options}
+            pointSize={this.props.pointSize}
             uid={this.props.uid}
             width={this.state.viewportWidth}
             xAxisSelectedIndex={this.state.xAxisSelectedIndex}

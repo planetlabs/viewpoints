@@ -1,4 +1,5 @@
 @import './graphs';
+@import './sidebar';
 
 .vp-app {
   display: flex;
@@ -14,6 +15,7 @@
   display: flex;
   flex-shrink: 0;
   flex-direction: row;
+  border-bottom: 1px solid @gray-light;
   .vp-header-item {
     flex-grow: 1;
     padding: @padding-large @padding-larger;
@@ -48,6 +50,14 @@
   }
 }
 
-.vp-graphs {
+.vp-content {
   flex-grow: 1;
+  position: relative;
+  .vp-graphs {
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: @sidebar-width;
+  }
 }

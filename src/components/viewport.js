@@ -11,6 +11,7 @@ var Viewport = React.createClass({
     highlightedIndicesArrays: React.PropTypes.array,
     normalIndicesArrays: React.PropTypes.array,
     options: React.PropTypes.arrayOf(React.PropTypes.string),
+    pointSize: React.PropTypes.number,
     uid: React.PropTypes.number,
     width: React.PropTypes.number,
     xAxisSelectedIndex: React.PropTypes.number,
@@ -35,11 +36,12 @@ var Viewport = React.createClass({
     attribute vec2 a_position;
     uniform vec2 u_translation;
     uniform vec2 u_zoom;
+    uniform float u_point_size;
 
     void main() {
        vec2 offset_position = (a_position + u_translation) * u_zoom;
        gl_Position = vec4(offset_position, 0, 1);
-       gl_PointSize = 2.0;
+       gl_PointSize = u_point_size;
     }
   `,
 
@@ -111,6 +113,7 @@ var Viewport = React.createClass({
 
     this.translationLocation = gl.getUniformLocation(program, 'u_translation');
     this.zoomLocation = gl.getUniformLocation(program, 'u_zoom');
+    this.pointSizeLocation = gl.getUniformLocation(program, 'u_point_size');
 
     this.gl = gl;
   },
@@ -118,6 +121,7 @@ var Viewport = React.createClass({
   _paint: function(canvas) {
     this.gl.uniform2f(this.translationLocation, this.state.translationX, this.state.translationY);
     this.gl.uniform2f(this.zoomLocation, this.state.zoomX, this.state.zoomY);
+    this.gl.uniform1f(this.pointSizeLocation, this.props.pointSize);
 
     var gl = this.gl;
     var colorLocation = this.colorLocation;

@@ -1,0 +1,25 @@
+@sidebar-width: 25em;
+
+.vp-sidebar {
+  width: @sidebar-width;
+  height: 100%;
+  border-left: 1px solid @gray-light;
+  background-color: @gray-lightest;
+  position: absolute;
+  top: 0;
+  right: 0;
+  .vp-sidebar-item {
+    padding: @padding-large;
+    &:nth-child(even) {
+      background-color: fade(black, 5%);
+    }
+
+    .vp-sidebar-item-value {
+      float: right;
+    }
+    .vp-sidebar-item-label {
+      margin-bottom: @padding-small;
+      font-weight: 700;
+    }
+  }
+}

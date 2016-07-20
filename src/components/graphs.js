@@ -40,6 +40,7 @@ var Graphs = React.createClass({
     highlightFunction: React.PropTypes.func,
     onColumnsChanged: React.PropTypes.func,
     options: React.PropTypes.arrayOf(React.PropTypes.string),
+    pointSize: React.PropTypes.number,
     rowClassName: React.PropTypes.string,
     viewportClassName: React.PropTypes.string
   },
@@ -189,6 +190,7 @@ var Graphs = React.createClass({
             key={i}
             normalIndicesArrays={this.state.normalIndicesArrays}
             options={this.props.options}
+            pointSize={this.props.pointSize}
             uid={i}/>
       );
     }
