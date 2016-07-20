@@ -307,12 +307,27 @@ var Viewport = React.createClass({
       }
       else if (event.altKey === true) {
         // Zoom
+        console.log("X, Y: ", x, y);
+
         let fracX = event.movementX / event.target.width * 2;
         let fracY = -event.movementY / event.target.height * 2;
 
+        let newZoomX = this.state.zoomX * (1 + fracX);
+        let newZoomY = this.state.zoomY * (1 + fracY);
+
+        // If we zoom in, the x, y location of the mouseDownX, mouseDownY will
+        // move. Set translation so that they do not move.
+        // let newX = ((this.state.mouseDownX / this.props.width) * 2 - 1) / newZoomX - this.state.translationX;
+        // let newY = (((event.target.height - this.state.mouseDownY) / this.props.height) * 2 - 1) / newZoomY - this.state.translationY;
+
+        // let newTx = newX - ;
+        // let newTy = this.state.translationY * (newZoomY / this.state.zoomY);
+
         this.setState({
-          zoomX: this.state.zoomX * (1 + fracX),
-          zoomY: this.state.zoomY * (1 + fracY)
+          zoomX: newZoomX,
+          zoomY: newZoomY,
+          // translationX: newTx,
+          // translationY: newTy
         });
       }
       else {
