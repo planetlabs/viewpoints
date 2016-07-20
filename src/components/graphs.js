@@ -19,11 +19,11 @@ function unselectAll(columnLength) {
     i++;
 
     if (i % maxPerArray === 0 || i === columnLength) {
-        normalIndicesArrays.push(new Uint16Array(normalIndices));
-        normalIndices = [];
+      normalIndicesArrays.push(new Uint16Array(normalIndices));
+      normalIndices = [];
 
-        highlightedIndicesArrays.push(new Uint16Array(highlightedIndices));
-        highlightedIndices = [];
+      highlightedIndicesArrays.push(new Uint16Array(highlightedIndices));
+      highlightedIndices = [];
     }
   }
   return [normalIndicesArrays, highlightedIndicesArrays];
@@ -37,11 +37,11 @@ var Graphs = React.createClass({
     columns: React.PropTypes.array,
     count: React.PropTypes.number,
     graphClassName: React.PropTypes.string,
+    highlightFunction: React.PropTypes.func,
+    onColumnsChanged: React.PropTypes.func,
     options: React.PropTypes.arrayOf(React.PropTypes.string),
     rowClassName: React.PropTypes.string,
-    highlightFunction: React.PropTypes.func,
-    viewportClassName: React.PropTypes.string,
-    onColumnsChanged: React.PropTypes.func
+    viewportClassName: React.PropTypes.string
   },
 
   getInitialState() {
@@ -53,6 +53,7 @@ var Graphs = React.createClass({
 
   componentDidMount() {
     window.addEventListener('keydown', this._keydown);
+    window.addEventListener('keyup', this._keyup);
   },
 
   componentDidUpdate(prevProps, prevState) {
@@ -66,7 +67,7 @@ var Graphs = React.createClass({
   },
 
   _keydown: function(event) {
-    switch(event.which) {
+    switch (event.which) {
       case 73:
         this.setState({
           highlightedIndicesArrays: this.state.normalIndicesArrays,
@@ -76,8 +77,19 @@ var Graphs = React.createClass({
       case 88:
         this._deleteHighlighted();
         break;
+
+      default:
+        break;
     }
-    console.log(event.which);
+    // console.log(event.which);
+  },
+
+  _keyup: function(event) {
+    switch (event.which) {
+
+      default:
+        break;
+    }
   },
 
   _deleteHighlighted: function() {
@@ -101,7 +113,6 @@ var Graphs = React.createClass({
       newColumns.push(newColumn);
     }
 
-    var exampleCol = this.props.columns[0];
     var newIndices = unselectAll(newColumns[0].length);
 
     this.props.onColumnsChanged(newColumns);
@@ -112,7 +123,7 @@ var Graphs = React.createClass({
   },
 
   _findSelectedIndices: function(ptArrays, xDown, xUp, yDown, yUp) {
-    console.log("finding highlighted");
+    // console.log('finding highlighted');
     var xMin = Math.min(xDown, xUp);
     var xMax = Math.max(xDown, xUp);
 
@@ -130,16 +141,16 @@ var Graphs = React.createClass({
       var normalIndices = [];
       var highlightedIndices = [];
 
-      for (var j = 0; j < pts.length; j+=2) {
+      for (var j = 0; j < pts.length; j += 2) {
         var x = pts[j];
-        var y = pts[j+1];
+        var y = pts[j + 1];
 
         if (x >= xMin && x <= xMax && y >= yMin && y <= yMax) {
-          highlightedIndices.push(j/2);
+          highlightedIndices.push(j / 2);
           hCounts++;
         }
         else {
-          normalIndices.push(j/2);
+          normalIndices.push(j / 2);
           nCounts++;
         }
       }
@@ -169,15 +180,16 @@ var Graphs = React.createClass({
         rows[rowIndex] = [];
       }
       rows[rowIndex].push(
-        <Graph axesClassName={this.props.axesClassName}
+        <Graph
+            axesClassName={this.props.axesClassName}
             className={this.props.graphClassName}
             columns={this.props.columns}
-            key={i}
-            uid={i}
-            options={this.props.options}
             highlightFunction={this._findSelectedIndices}
+            highlightedIndicesArrays={this.state.highlightedIndicesArrays}
+            key={i}
             normalIndicesArrays={this.state.normalIndicesArrays}
-            highlightedIndicesArrays={this.state.highlightedIndicesArrays}/>
+            options={this.props.options}
+            uid={i}/>
       );
     }
 

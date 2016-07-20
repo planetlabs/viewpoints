@@ -76,7 +76,8 @@ var Graph = React.createClass({
               selectedIndex={this.state.yAxisSelectedIndex}/>
         </div>
         <div className={this.props.viewportClassName || 'vp-graph-viewport'} ref="viewport"/>
-        <Viewport columns={this.props.columns}
+        <Viewport
+            columns={this.props.columns}
             height={this.state.viewportHeight}
             highlightFunction={this.props.highlightFunction}
             highlightedIndicesArrays={this.props.highlightedIndicesArrays}
