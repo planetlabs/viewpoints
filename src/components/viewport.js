@@ -23,6 +23,8 @@ var Viewport = React.createClass({
       mouseIsDown: false,
       mouseDownX: 0,
       mouseDownY: 0,
+      mouseDownRawX: 0,
+      mouseDownRawY: 0,
       mouseUpX: 0,
       mouseUpY: 0,
       translationX: 0,
@@ -275,29 +277,40 @@ var Viewport = React.createClass({
     this.ptArrays = ptArrays;
   },
 
-  _fixX: function(event) {
+  _rawToNormalizedX: function(event) {
     return ((event.offsetX / this.props.width) * 2 - 1) / this.state.zoomX - this.state.translationX;
   },
 
-  _fixY: function(event) {
+  _rawToNormalizedY: function(event) {
     return (((event.target.height - event.offsetY) / this.props.height) * 2 - 1) / this.state.zoomY - this.state.translationY;
   },
 
+  _normalizedToRawX: function(x) {
+    return (((x + this.state.translationX) * this.state.zoomX) + 1) / 2 * this.props.width;
+  },
+
+  _normalizedToRawY: function(y) {
+    return (((y + this.state.translationY) * this.state.zoomY) + 1) / 2 * this.props.height;
+  },
+
   mousedown: function(event) {
-    var x = this._fixX(event);
-    var y = this._fixY(event);
+    var x = this._rawToNormalizedX(event);
+    var y = this._rawToNormalizedY(event);
     this.setState({
       mouseIsDown: true,
       mouseDownX: x,
+      mouseDownRawX: event.offsetX,
       mouseUpX: x,
       mouseDownY: y,
+      mouseDownRawY: event.target.height - event.offsetY,
       mouseUpY: y
     });
   },
 
   mousemove: function(event) {
-    var x = this._fixX(event);
-    var y = this._fixY(event);
+    var x = this._rawToNormalizedX(event);
+    var y = this._rawToNormalizedY(event);
+
     if (this.state.mouseIsDown === true) {
       if (event.metaKey === true) {
         // Pan
@@ -311,8 +324,6 @@ var Viewport = React.createClass({
       }
       else if (event.altKey === true) {
         // Zoom
-        console.log("X, Y: ", x, y);
-
         let fracX = event.movementX / event.target.width * 2;
         let fracY = -event.movementY / event.target.height * 2;
 
@@ -321,17 +332,18 @@ var Viewport = React.createClass({
 
         // If we zoom in, the x, y location of the mouseDownX, mouseDownY will
         // move. Set translation so that they do not move.
-        // let newX = ((this.state.mouseDownX / this.props.width) * 2 - 1) / newZoomX - this.state.translationX;
-        // let newY = (((event.target.height - this.state.mouseDownY) / this.props.height) * 2 - 1) / newZoomY - this.state.translationY;
+        // In other words: zoom in on the location that was clicked, not the origin
+        let newMappedRawX = ((this.state.mouseDownRawX / this.props.width) * 2 - 1) / newZoomX - this.state.translationX;
+        let xDiff = newMappedRawX - this.state.mouseDownX;
 
-        // let newTx = newX - ;
-        // let newTy = this.state.translationY * (newZoomY / this.state.zoomY);
+        let newMappedRawY = -(((event.target.height - this.state.mouseDownRawY) / this.props.height) * 2 - 1) / newZoomY - this.state.translationY;
+        let yDiff = newMappedRawY - this.state.mouseDownY;
 
         this.setState({
           zoomX: newZoomX,
           zoomY: newZoomY,
-          // translationX: newTx,
-          // translationY: newTy
+          translationX: this.state.translationX + xDiff,
+          translationY: this.state.translationY + yDiff
         });
       }
       else {
@@ -351,8 +363,8 @@ var Viewport = React.createClass({
   },
 
   mouseup: function(event) {
-    var x = this._fixX(event);
-    var y = this._fixY(event);
+    var x = this._rawToNormalizedX(event);
+    var y = this._rawToNormalizedY(event);
     this.setState({
       mouseIsDown: false,
       mouseUpX: x,
