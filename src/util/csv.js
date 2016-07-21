@@ -36,9 +36,14 @@ function intern(column) {
     errors.push("some values were meant to be floats, others were meant to be interned...");
   }
 
+  var reverseEnums = new Map();
+  enums.forEach(function(val, key) {
+    reverseEnums.set(val, key);
+  });
+
   return {
     newColumn: newColumn,
-    enums: enums,
+    enums: reverseEnums,
     errors: errors
   };
 }

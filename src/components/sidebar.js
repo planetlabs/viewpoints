@@ -4,18 +4,24 @@ var Sidebar = React.createClass({
 
   propTypes: {
     onPointSizeChange: React.PropTypes.func,
-    pointSize: React.PropTypes.number
+    overpaintFactor: React.PropTypes.number,
+    onOverpaintFactorChange: React.PropTypes.func,
+    pointSize: React.PropTypes.number,
   },
 
   _onPointSizeChange: function(event) {
     this.props.onPointSizeChange(parseFloat(event.target.value));
   },
 
+  _onOverpaintFactorChange: function(event) {
+    this.props.onOverpaintFactorChange(parseFloat(event.target.value));
+  },
+
   render: function() {
 
     var items = [
       {
-        label: 'Point size',
+        label: 'Point Size',
         value: this.props.pointSize,
         input: (
           <input max="10"
@@ -24,6 +30,18 @@ var Sidebar = React.createClass({
               step="0.1"
               type="range"
               value={this.props.pointSize}/>
+        )
+      },
+      {
+        label: 'Overpaint Factor',
+        value: this.props.overpaintFactor,
+        input: (
+          <input max="100"
+              min="0"
+              onChange={this._onOverpaintFactorChange}
+              step="1"
+              type="range"
+              value={this.props.overpaintFactor}/>
         )
       }
     ];

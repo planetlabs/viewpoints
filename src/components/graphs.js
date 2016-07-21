@@ -36,10 +36,12 @@ var Graphs = React.createClass({
     className: React.PropTypes.string,
     columns: React.PropTypes.array,
     count: React.PropTypes.number,
+    enums: React.PropTypes.array,
     graphClassName: React.PropTypes.string,
     highlightFunction: React.PropTypes.func,
     onColumnsChanged: React.PropTypes.func,
     options: React.PropTypes.arrayOf(React.PropTypes.string),
+    overpaintFactor: React.PropTypes.number,
     pointSize: React.PropTypes.number,
     rowClassName: React.PropTypes.string,
     viewportClassName: React.PropTypes.string
@@ -185,11 +187,13 @@ var Graphs = React.createClass({
             axesClassName={this.props.axesClassName}
             className={this.props.graphClassName}
             columns={this.props.columns}
+            enums={this.props.enums}
             highlightFunction={this._findSelectedIndices}
             highlightedIndicesArrays={this.state.highlightedIndicesArrays}
             key={i}
             normalIndicesArrays={this.state.normalIndicesArrays}
             options={this.props.options}
+            overpaintFactor={this.props.overpaintFactor}
             pointSize={this.props.pointSize}
             uid={i}/>
       );

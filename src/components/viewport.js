@@ -6,11 +6,13 @@ var Viewport = React.createClass({
 
   propTypes: {
     columns: React.PropTypes.array,
+    enums: React.PropTypes.array,
     height: React.PropTypes.number,
     highlightFunction: React.PropTypes.func,
     highlightedIndicesArrays: React.PropTypes.array,
     normalIndicesArrays: React.PropTypes.array,
     options: React.PropTypes.arrayOf(React.PropTypes.string),
+    overpaintFactor: React.PropTypes.number,
     pointSize: React.PropTypes.number,
     uid: React.PropTypes.number,
     width: React.PropTypes.number,
@@ -82,8 +84,31 @@ var Viewport = React.createClass({
     var canvas = ReactDOM.findDOMNode(this);
     if (this.props.xAxisSelectedIndex != nextProps.xAxisSelectedIndex ||
         this.props.yAxisSelectedIndex != nextProps.yAxisSelectedIndex) {
+      let newX = this.props.columns[nextProps.xAxisSelectedIndex];
+      let newEnumsX = this.props.enums[nextProps.xAxisSelectedIndex];
+
+      console.log("this.enums", this.props.enums);
+      console.log("new x enums", newEnumsX);
+
+      console.log("how many enums?", newEnumsX.size);
+      if (newEnumsX.size > 2) {
+        console.log("This is a candidate for thumbnail viewing");
+      }
+
+      // var enumX = this.props.enums[nextProps.xAxisSelectedIndex];
+      // console.log("FIrst of new column:", newX[0]);
+
+      // console.log("enums!", enumX);
+      // console.log("enums size:", enumX.length);
+
       this._setAxes(
         canvas, nextProps.xAxisSelectedIndex, nextProps.yAxisSelectedIndex);
+      this.setState({
+        zoomX: 1,
+        zoomY: 1,
+        translationX: 0,
+        translationY: 0
+      });
     }
   },
 
@@ -110,9 +135,9 @@ var Viewport = React.createClass({
     gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
     // set the resolution
 
-    var colorLocation = gl.getUniformLocation(program, 'u_color');
-    this.colorLocation = colorLocation;
+    gl.clearColor(0, 0, 0, 1);
 
+    this.colorLocation =  gl.getUniformLocation(program, 'u_color');
     this.translationLocation = gl.getUniformLocation(program, 'u_translation');
     this.zoomLocation = gl.getUniformLocation(program, 'u_zoom');
     this.pointSizeLocation = gl.getUniformLocation(program, 'u_point_size');
@@ -132,10 +157,7 @@ var Viewport = React.createClass({
     }
 
     // Draw background rectangle
-    gl.blendFunc(gl.ONE, gl.ZERO);
-    Webgl.setRectangle(gl, -1, -1, 2, 2);
-    setColor(0, 0, 0, 1);
-    gl.drawArrays(gl.TRIANGLES, 0, 6);
+    gl.clear(gl.COLOR_BUFFER_BIT);
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
 
     // Draw the data points themselves
@@ -148,8 +170,7 @@ var Viewport = React.createClass({
     // using drawElements separately.
 
     // Draw the red (normal) points
-    var residualColor = 3;
-    setColor(255, residualColor, residualColor, 0.9);
+    setColor(255, this.props.overpaintFactor, this.props.overpaintFactor, 0.9);
     if (this.props.normalIndicesArrays.length === 0) {
       return;
     }
@@ -182,7 +203,7 @@ var Viewport = React.createClass({
 
     // Set the pen to blue and draw the highlighted points
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
-    setColor(residualColor, residualColor, 255, 0.9);
+    setColor(this.props.overpaintFactor, this.props.overpaintFactor, 255, 0.9);
     for (let i = 0; i < this.ptArrays.length; i++) {
       let pts = this.ptArrays[i];
       let highlightedIndices = this.props.highlightedIndicesArrays[i];
@@ -214,6 +235,7 @@ var Viewport = React.createClass({
   },
 
   _setAxes: function(canvas, indexX = this.props.xAxisSelectedIndex, indexY = this.props.yAxisSelectedIndex) {
+
     var xAxis = this.props.columns[indexX];
     var yAxis = this.props.columns[indexY];
 

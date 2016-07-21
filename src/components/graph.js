@@ -9,10 +9,12 @@ var Graph = React.createClass({
     axesClassName: React.PropTypes.string,
     className: React.PropTypes.string,
     columns: React.PropTypes.array,
+    enums: React.PropTypes.array,
     highlightFunction: React.PropTypes.func,
     highlightedIndicesArrays: React.PropTypes.array,
     normalIndicesArrays: React.PropTypes.array,
     options: React.PropTypes.arrayOf(React.PropTypes.string),
+    overpaintFactor: React.PropTypes.number,
     pointSize: React.PropTypes.number,
     uid: React.PropTypes.number,
     viewportClassName: React.PropTypes.string
@@ -79,11 +81,13 @@ var Graph = React.createClass({
         <div className={this.props.viewportClassName || 'vp-graph-viewport'} ref="viewport"/>
         <Viewport
             columns={this.props.columns}
+            enums={this.props.enums}
             height={this.state.viewportHeight}
             highlightFunction={this.props.highlightFunction}
             highlightedIndicesArrays={this.props.highlightedIndicesArrays}
             normalIndicesArrays={this.props.normalIndicesArrays}
             options={this.props.options}
+            overpaintFactor={this.props.overpaintFactor}
             pointSize={this.props.pointSize}
             uid={this.props.uid}
             width={this.state.viewportWidth}
