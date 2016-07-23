@@ -84,23 +84,6 @@ var Viewport = React.createClass({
     var canvas = ReactDOM.findDOMNode(this);
     if (this.props.xAxisSelectedIndex != nextProps.xAxisSelectedIndex ||
         this.props.yAxisSelectedIndex != nextProps.yAxisSelectedIndex) {
-      let newX = this.props.columns[nextProps.xAxisSelectedIndex];
-      let newEnumsX = this.props.enums[nextProps.xAxisSelectedIndex];
-
-      console.log("this.enums", this.props.enums);
-      console.log("new x enums", newEnumsX);
-
-      console.log("how many enums?", newEnumsX.size);
-      if (newEnumsX.size > 2) {
-        console.log("This is a candidate for thumbnail viewing");
-      }
-
-      // var enumX = this.props.enums[nextProps.xAxisSelectedIndex];
-      // console.log("FIrst of new column:", newX[0]);
-
-      // console.log("enums!", enumX);
-      // console.log("enums size:", enumX.length);
-
       this._setAxes(
         canvas, nextProps.xAxisSelectedIndex, nextProps.yAxisSelectedIndex);
       this.setState({
@@ -280,7 +263,8 @@ var Viewport = React.createClass({
     var pts = [];
     var ptArrays = [];
 
-    var maxPerArray = 65530;
+    var maxPerArray = 65530; // TODO: pull this into a global variable
+    // It is replicated in graph.js
 
     var i = 0;
 

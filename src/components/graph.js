@@ -25,7 +25,10 @@ var Graph = React.createClass({
       viewportHeight: 600,
       viewportWidth: 600,
       xAxisSelectedIndex: 0,
-      yAxisSelectedIndex: 1
+      yAxisSelectedIndex: 1,
+      xOptions: this.props.options,
+      yOptions: this.props.options,
+      thumbnails: false
     };
   },
 
@@ -57,7 +60,36 @@ var Graph = React.createClass({
   },
 
   _onXAxisSelect: function(index) {
-    this.setState({xAxisSelectedIndex: index});
+    let newEnumsX = this.props.enums[index];
+    let thumbnails = false;
+    if (newEnumsX.size > 2) {
+      for (var v of newEnumsX.values()) {
+        if (v.startsWith('http://') || v.startsWith('www.') || v.startsWith('https://'))
+        {
+          thumbnails = true;
+          break;
+        }
+      }
+    }
+    if (thumbnails) {
+      console.log('thumbs!');
+      this.savedYAxisSelectedIndex = this.state.yAxisSelectedIndex;
+      this.setState({
+        xAxisSelectedIndex: index,
+        yOptions: [1, 4, 9],
+        yAxisSelectedIndex: 0,
+        thumbnails: true
+      });
+    }
+    else {
+      this.setState({
+        xAxisSelectedIndex: index,
+        yAxisSelectedIndex: this.savedYAxisSelectedIndex,
+        yOptions: this.props.options,
+        thumbnails: false
+      });
+    }
+
   },
 
   _onYAxisSelect: function(index) {
@@ -65,34 +97,75 @@ var Graph = React.createClass({
   },
 
   render: function() {
+    if (this.state.thumbnails) {
+      var maxPerArray = 65530;  // TODO: pull this into a global variable
+      // It is replicated in viewport.js
+      var numThumbs = this.state.yOptions[this.state.yAxisSelectedIndex];
+      var urls = [];
+
+      var minimumHighlightedIndices = [];
+      for (var i = 0; i < this.props.highlightedIndicesArrays.length; i++) {
+        var highlightedIndices = this.props.highlightedIndicesArrays[i];
+        for (var j = 0; j < highlightedIndices.length; j++) {
+          minimumHighlightedIndices.push(highlightedIndices[j] * maxPerArray);
+          if (minimumHighlightedIndices.length == numThumbs) {
+            break
+          }
+        }
+        if (minimumHighlightedIndices.length == numThumbs) {
+          break
+        }
+      }
+
+      console.log("min h i", minimumHighlightedIndices);
+
+      for (var i = 0; i < minimumHighlightedIndices.length; i++) {
+        var index = minimumHighlightedIndices[i];
+        console.log(this.state.columns[this.state.xAxisSelectedIndex][index]);
+      }
+
+      var mainDisplay = <div>
+        {urls.map(function(element, index) {
+          return (
+            <div>{element}</div>
+          );
+        })}
+      </div>
+    }
+    else{
+      var mainDisplay = (
+      <Viewport
+          columns={this.props.columns}
+          enums={this.props.enums}
+          height={this.state.viewportHeight}
+          highlightFunction={this.props.highlightFunction}
+          highlightedIndicesArrays={this.props.highlightedIndicesArrays}
+          normalIndicesArrays={this.props.normalIndicesArrays}
+          options={this.props.options}
+          overpaintFactor={this.props.overpaintFactor}
+          pointSize={this.props.pointSize}
+          uid={this.props.uid}
+          width={this.state.viewportWidth}
+          xAxisSelectedIndex={this.state.xAxisSelectedIndex}
+          yAxisSelectedIndex={this.state.yAxisSelectedIndex}/>
+      )
+    }
+
     return (
       <div className={this.props.className || 'vp-graph'}>
         <div className={this.props.axesClassName || 'vp-graph-axes'}>
           <Dropdown onSelect={this._onXAxisSelect}
-              options={this.props.options}
+              options={this.state.xOptions}
               ref="xaxis"
               selectedIndex={this.state.xAxisSelectedIndex}/>
           <span> vs </span>
           <Dropdown onSelect={this._onYAxisSelect}
-              options={this.props.options}
+              options={this.state.yOptions}
               ref="yaxis"
               selectedIndex={this.state.yAxisSelectedIndex}/>
         </div>
         <div className={this.props.viewportClassName || 'vp-graph-viewport'} ref="viewport"/>
-        <Viewport
-            columns={this.props.columns}
-            enums={this.props.enums}
-            height={this.state.viewportHeight}
-            highlightFunction={this.props.highlightFunction}
-            highlightedIndicesArrays={this.props.highlightedIndicesArrays}
-            normalIndicesArrays={this.props.normalIndicesArrays}
-            options={this.props.options}
-            overpaintFactor={this.props.overpaintFactor}
-            pointSize={this.props.pointSize}
-            uid={this.props.uid}
-            width={this.state.viewportWidth}
-            xAxisSelectedIndex={this.state.xAxisSelectedIndex}
-            yAxisSelectedIndex={this.state.yAxisSelectedIndex}/>
+        { mainDisplay }
       </div>
     );
   }
