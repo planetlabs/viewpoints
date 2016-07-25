@@ -3,6 +3,7 @@
   flex-direction: column;
   border-right: 1px solid @gray-lighter;
   position: relative;
+  flex-shrink: 1;
   &:last-child {
     border-right: none;
   }
@@ -19,4 +20,16 @@
   .vp-graph-viewport {
     flex-grow: 1;
   }
+}
+
+.img-container {
+  display: flex;
+  flex-grow: 0;
+  width: 20%;
+  background-color: rgb(200, 200, 250);
+  flex-direction: row;
+  align-content: flex-start;
+}
+.thumbnail {
+  align-self: flex-start;
 }

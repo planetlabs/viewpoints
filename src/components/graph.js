@@ -77,7 +77,7 @@ var Graph = React.createClass({
       this.setState({
         xAxisSelectedIndex: index,
         yOptions: [1, 4, 9],
-        yAxisSelectedIndex: 0,
+        yAxisSelectedIndex: 1,
         thumbnails: true
       });
     }
@@ -107,7 +107,7 @@ var Graph = React.createClass({
       for (var i = 0; i < this.props.highlightedIndicesArrays.length; i++) {
         var highlightedIndices = this.props.highlightedIndicesArrays[i];
         for (var j = 0; j < highlightedIndices.length; j++) {
-          minimumHighlightedIndices.push(highlightedIndices[j] * maxPerArray);
+          minimumHighlightedIndices.push(highlightedIndices[j] + i * maxPerArray);
           if (minimumHighlightedIndices.length == numThumbs) {
             break
           }
@@ -116,18 +116,19 @@ var Graph = React.createClass({
           break
         }
       }
-
-      console.log("min h i", minimumHighlightedIndices);
+      // console.log("min highlighted indices", minimumHighlightedIndices);
 
       for (var i = 0; i < minimumHighlightedIndices.length; i++) {
         var index = minimumHighlightedIndices[i];
-        console.log(this.state.columns[this.state.xAxisSelectedIndex][index]);
+        var enumMap = this.props.enums[this.state.xAxisSelectedIndex];
+        // console.log("enum map", enumMap.get(index));
+        urls.push(enumMap.get(index));
       }
 
-      var mainDisplay = <div>
+      var mainDisplay = <div className="img-container">
         {urls.map(function(element, index) {
           return (
-            <div>{element}</div>
+            <img className="thumbnail" src={element}/>
           );
         })}
       </div>
