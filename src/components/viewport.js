@@ -103,31 +103,33 @@ var Viewport = React.createClass({
   },
 
   _paintHud(canvas) {
-    var ctx = canvas.getContext("2d");
+    var ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    var yellow = 'rgb(200, 200, 0)';
+    var offset = 40;
 
     // Lines
-    ctx.lineWidth="1";
+    ctx.lineWidth = '1';
     ctx.beginPath();
-    ctx.strokeStyle="rgb(250, 250, 0)";
-    ctx.moveTo(canvas.width * 0.05, canvas.height * 0.05);
-    ctx.lineTo(canvas.width * 0.05, canvas.height * 0.95);
-    ctx.lineTo(canvas.width * 0.95, canvas.height * 0.95);
+    ctx.strokeStyle = yellow;
+    ctx.moveTo(offset, offset);
+    ctx.lineTo(offset, canvas.height - offset);
+    ctx.lineTo(canvas.width - offset, canvas.height - offset);
     ctx.stroke();
 
     var xAxisTitle = this.props.options[this.props.xAxisSelectedIndex];
     var yAxisTitle = this.props.options[this.props.yAxisSelectedIndex];
 
-    ctx.fillStyle="rgb(250, 250, 0)";
-    ctx.font="15px Arial";
-    ctx.textAlign="center";
-    ctx.fillText(xAxisTitle, canvas.width / 2, canvas.height * 0.95 - 2);
+    ctx.fillStyle = yellow;
+    ctx.font = '15px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText(xAxisTitle, canvas.width / 2, canvas.height - offset / 2);
 
-    ctx.translate(canvas.width * 0.05, canvas.height / 2);
+    ctx.translate(offset, canvas.height / 2);
     ctx.rotate(90 * Math.PI / 180);
-    ctx.fillText(yAxisTitle, 0, -2);
+    ctx.fillText(yAxisTitle, 0, offset / 2);
     ctx.rotate(-90 * Math.PI / 180);
-    ctx.translate(-canvas.width * 0.05, -canvas.height / 2);
+    ctx.translate(-offset, -canvas.height / 2);
   },
 
   _prepareWebgl: function(canvas) {
@@ -289,7 +291,7 @@ var Viewport = React.createClass({
     }
 
 
-    var bufferPercent = 0.05;
+    var bufferPercent = 0.2;
     var xRange = xMax - xMin;
     xMax = xMax + (bufferPercent * xRange);
     xMin = xMin - (bufferPercent * xRange);
