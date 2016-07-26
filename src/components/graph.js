@@ -72,7 +72,6 @@ var Graph = React.createClass({
       }
     }
     if (thumbnails) {
-      console.log('thumbs!');
       this.savedYAxisSelectedIndex = this.state.yAxisSelectedIndex;
       this.setState({
         xAxisSelectedIndex: index,
@@ -82,6 +81,7 @@ var Graph = React.createClass({
       });
     }
     else {
+      this.savedYAxisSelectedIndex = this.state.yAxisSelectedIndex;
       this.setState({
         xAxisSelectedIndex: index,
         yAxisSelectedIndex: this.savedYAxisSelectedIndex,

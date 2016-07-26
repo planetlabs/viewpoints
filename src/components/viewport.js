@@ -1,5 +1,4 @@
 var React = require('react');
-var ReactDOM = require('react-dom');
 var Webgl = require('../util/webgl');
 
 var Viewport = React.createClass({
@@ -61,7 +60,6 @@ var Viewport = React.createClass({
 
   componentDidMount: function() {
     var canvas = this.refs.webglCanvas;
-    console.log("canvas", canvas);
     this._prepareWebgl(canvas);
     this._setAxes(canvas);
     this._paint(canvas);
