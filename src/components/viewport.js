@@ -60,7 +60,8 @@ var Viewport = React.createClass({
   `,
 
   componentDidMount: function() {
-    var canvas = ReactDOM.findDOMNode(this);
+    var canvas = this.refs.webglCanvas;
+    console.log("canvas", canvas);
     this._prepareWebgl(canvas);
     this._setAxes(canvas);
     this._paint(canvas);
@@ -68,10 +69,13 @@ var Viewport = React.createClass({
     canvas.addEventListener('mousedown', this.mousedown);
     canvas.addEventListener('mousemove', this.mousemove);
     canvas.addEventListener('mouseup', this.mouseup);
+
+    var hudCanvas = this.refs.hudCanvas;
+    this._paintHud(hudCanvas);
   },
 
   componentDidUpdate: function(prevProps, prevState) {
-    var canvas = ReactDOM.findDOMNode(this);
+    var canvas = this.refs.webglCanvas;
     this.gl.viewport(0, 0, this.props.width, this.props.height);
     if (this.props.columns !== prevProps.columns) {
       this._setAxes(canvas);
@@ -79,9 +83,12 @@ var Viewport = React.createClass({
     else if (this.state.mouseUpX === prevState.mouseUpX && this.state.mouseUpY === prevState.mouseUpY) {
       this._paint(canvas);
     }
+
+    var hudCanvas = this.refs.hudCanvas;
+    this._paintHud(hudCanvas);
   },
   componentWillReceiveProps(nextProps) {
-    var canvas = ReactDOM.findDOMNode(this);
+    var canvas = this.refs.webglCanvas;
     if (this.props.xAxisSelectedIndex != nextProps.xAxisSelectedIndex ||
         this.props.yAxisSelectedIndex != nextProps.yAxisSelectedIndex) {
       this._setAxes(
@@ -93,6 +100,34 @@ var Viewport = React.createClass({
         translationY: 0
       });
     }
+  },
+
+  _paintHud(canvas) {
+    var ctx = canvas.getContext("2d");
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Lines
+    ctx.lineWidth="1";
+    ctx.beginPath();
+    ctx.strokeStyle="rgb(250, 250, 0)";
+    ctx.moveTo(canvas.width * 0.05, canvas.height * 0.05);
+    ctx.lineTo(canvas.width * 0.05, canvas.height * 0.95);
+    ctx.lineTo(canvas.width * 0.95, canvas.height * 0.95);
+    ctx.stroke();
+
+    var xAxisTitle = this.props.options[this.props.xAxisSelectedIndex];
+    var yAxisTitle = this.props.options[this.props.yAxisSelectedIndex];
+
+    ctx.fillStyle="rgb(250, 250, 0)";
+    ctx.font="15px Arial";
+    ctx.textAlign="center";
+    ctx.fillText(xAxisTitle, canvas.width / 2, canvas.height * 0.95 - 2);
+
+    ctx.translate(canvas.width * 0.05, canvas.height / 2);
+    ctx.rotate(90 * Math.PI / 180);
+    ctx.fillText(yAxisTitle, 0, -2);
+    ctx.rotate(-90 * Math.PI / 180);
+    ctx.translate(-canvas.width * 0.05, -canvas.height / 2);
   },
 
   _prepareWebgl: function(canvas) {
@@ -214,7 +249,12 @@ var Viewport = React.createClass({
       gl.drawElements(
         gl.LINES, 8, gl.UNSIGNED_SHORT, canvas.indexBuffer);
     }
-    // console.log('painted on canvas', this.props.uid);
+
+    // Draw the lines of the axes
+    setColor(250, 250, 0, 1);
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array([
+      0, 1,
+      1, 2]), gl.STATIC_DRAW);
   },
 
   _setAxes: function(canvas, indexX = this.props.xAxisSelectedIndex, indexY = this.props.yAxisSelectedIndex) {
@@ -379,15 +419,22 @@ var Viewport = React.createClass({
   },
 
   render: function() {
-    var style = {
-      backgroundColor: 'white'
+    var hudStyle = {
+      "pointer-events": "none"
     };
     return (
-      <canvas height={this.props.height}
-          style={style}
+      <div>
+        <canvas ref="webglCanvas" height={this.props.height}
           width={this.props.width}>
-        I am a viewport!
-      </canvas>
+        </canvas>
+
+        <canvas ref="hudCanvas" height={this.props.height}
+          style={hudStyle}
+          width={this.props.width}>
+        </canvas>
+
+
+      </div>
     );
   }
 });
