@@ -4,6 +4,7 @@
   border-right: 1px solid @gray-lighter;
   position: relative;
   flex-shrink: 1;
+  width: 50%;
   &:last-child {
     border-right: none;
   }
@@ -24,12 +25,14 @@
 
 .img-container {
   display: flex;
+  width: 100%;
   flex-grow: 0;
-  width: 20%;
   background-color: rgb(200, 200, 250);
   flex-direction: row;
+  overflow: auto;
+  flex-wrap: wrap;
   align-content: flex-start;
 }
-.thumbnail {
+.thumb {
   align-self: flex-start;
 }

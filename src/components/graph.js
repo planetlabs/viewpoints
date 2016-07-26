@@ -128,7 +128,7 @@ var Graph = React.createClass({
       var mainDisplay = <div className="img-container">
         {urls.map(function(element, index) {
           return (
-            <img className="thumbnail" src={element}/>
+            <img className="thumb" src={element}/>
           );
         })}
       </div>
