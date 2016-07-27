@@ -30,8 +30,8 @@ var Viewport = React.createClass({
       mouseUpY: 0,
       translationX: 0,
       translationY: 0,
-      zoomX: 1,
-      zoomY: 1
+      zoomX: 0.8,
+      zoomY: 0.8
     };
   },
 
@@ -92,8 +92,8 @@ var Viewport = React.createClass({
       this._setAxes(
         canvas, nextProps.xAxisSelectedIndex, nextProps.yAxisSelectedIndex);
       this.setState({
-        zoomX: 1,
-        zoomY: 1,
+        zoomX: 0.8,
+        zoomY: 0.8,
         translationX: 0,
         translationY: 0
       });
@@ -104,7 +104,8 @@ var Viewport = React.createClass({
     var ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     var yellow = 'rgb(200, 200, 0)';
-    var offset = 40;
+    var offset = 60;
+    var suboffset = 30;
 
     // Lines
     ctx.lineWidth = '1';
@@ -113,7 +114,6 @@ var Viewport = React.createClass({
     ctx.moveTo(offset, offset);
     ctx.lineTo(offset, canvas.height - offset);
     ctx.lineTo(canvas.width - offset, canvas.height - offset);
-    ctx.stroke();
 
     var xAxisTitle = this.props.options[this.props.xAxisSelectedIndex];
     var yAxisTitle = this.props.options[this.props.yAxisSelectedIndex];
@@ -123,11 +123,36 @@ var Viewport = React.createClass({
     ctx.textAlign = 'center';
     ctx.fillText(xAxisTitle, canvas.width / 2, canvas.height - offset / 2);
 
+    var axesMaxX = (this._rawToNormalizedX({offsetX: canvas.width - offset}) + 1) / 2 * (this.xMax - this.xMin) + this.xMin;
+    ctx.fillText(axesMaxX.toFixed(2), canvas.width - offset, canvas.height - offset / 2);
+    ctx.moveTo(canvas.width - offset, canvas.height - offset);
+    ctx.lineTo(canvas.width - offset, canvas.height - offset + 8);
+
+    var axesMinX = (this._rawToNormalizedX({offsetX: offset + suboffset}) + 1) / 2 * (this.xMax - this.xMin) + this.xMin;
+    ctx.fillText(axesMinX.toFixed(2), offset + suboffset, canvas.height - offset / 2);
+    ctx.moveTo(offset + suboffset, canvas.height - offset);
+    ctx.lineTo(offset + suboffset, canvas.height - offset + 8);
+
+    ctx.textAlign = 'left';
+    var axesMaxY = (this._rawToNormalizedY({offsetY: offset, target: {height: canvas.height}}) + 1) / 2 * (this.yMax - this.yMin) + this.yMin;
+    ctx.fillText(axesMaxY.toFixed(2), 5, offset);
+    ctx.moveTo(offset, offset);
+    ctx.lineTo(offset - 8, offset);
+
+    var axesMinY = (this._rawToNormalizedY({offsetY: canvas.height - offset - suboffset, target: {height: canvas.height}}) + 1) / 2 * (this.yMax - this.yMin) + this.yMin;
+    ctx.fillText(axesMinY.toFixed(2), 5, canvas.height - offset - suboffset);
+    ctx.moveTo(offset, canvas.height - offset - suboffset);
+    ctx.lineTo(offset - 8, canvas.height - offset - suboffset);
+    ctx.stroke();
+
+    ctx.textAlign = 'center';
     ctx.translate(offset, canvas.height / 2);
-    ctx.rotate(90 * Math.PI / 180);
-    ctx.fillText(yAxisTitle, 0, offset / 2);
     ctx.rotate(-90 * Math.PI / 180);
+    ctx.fillText(yAxisTitle, 0, -offset / 2);
+    ctx.rotate(90 * Math.PI / 180);
     ctx.translate(-offset, -canvas.height / 2);
+
+
   },
 
   _prepareWebgl: function(canvas) {
@@ -289,15 +314,7 @@ var Viewport = React.createClass({
     }
 
 
-    var bufferPercent = 0.2;
-    var xRange = xMax - xMin;
-    xMax = xMax + (bufferPercent * xRange);
-    xMin = xMin - (bufferPercent * xRange);
     var xScale = 2 / (xMax - xMin);
-
-    var yRange = yMax - yMin;
-    yMax = yMax + (bufferPercent * yRange);
-    yMin = yMin - (bufferPercent * yRange);
     var yScale = 2 / (yMax - yMin);
 
     var pts = [];
@@ -319,6 +336,11 @@ var Viewport = React.createClass({
         pts = [];
       }
     }
+
+    this.xMin = xMin;
+    this.xMax = xMax;
+    this.yMin = yMin;
+    this.yMax = yMax;
 
     this.ptArrays = ptArrays;
   },
