@@ -104,7 +104,7 @@ var Graph = React.createClass({
       var urls = [];
 
       var minimumHighlightedIndices = [];
-      for (var i = 0; i < this.props.highlightedIndicesArrays.length; i++) {
+      for (let i = 0; i < this.props.highlightedIndicesArrays.length; i++) {
         var highlightedIndices = this.props.highlightedIndicesArrays[i];
         for (var j = 0; j < highlightedIndices.length; j++) {
           minimumHighlightedIndices.push(highlightedIndices[j] + i * maxPerArray);
@@ -116,7 +116,7 @@ var Graph = React.createClass({
           break
         }
       }
-      // console.log("min highlighted indices", minimumHighlightedIndices);
+      console.log("min highlighted indices", minimumHighlightedIndices);
 
       for (var i = 0; i < minimumHighlightedIndices.length; i++) {
         var index = minimumHighlightedIndices[i];

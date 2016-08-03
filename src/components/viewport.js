@@ -161,9 +161,15 @@ var Viewport = React.createClass({
 
     gl.useProgram(program);
 
-    gl.enable(gl.BLEND);
     gl.disable(gl.DEPTH_TEST);
+
+    gl.enable(gl.BLEND);
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
+    gl.clearColor(0, 0, 0, 1);
+
+    gl.enable(gl.STENCIL_TEST);
+    gl.stencilMask(0xFF);
+    gl.clearStencil(0);
 
     var buffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
@@ -178,7 +184,6 @@ var Viewport = React.createClass({
     gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
     // set the resolution
 
-    gl.clearColor(0, 0, 0, 1);
 
     this.colorLocation =  gl.getUniformLocation(program, 'u_color');
     this.translationLocation = gl.getUniformLocation(program, 'u_translation');
@@ -194,13 +199,14 @@ var Viewport = React.createClass({
     this.gl.uniform1f(this.pointSizeLocation, this.props.pointSize);
 
     var gl = this.gl;
+
     var colorLocation = this.colorLocation;
     function setColor(r, g, b, a) {
       gl.uniform4f(colorLocation, r / 255, g / 255, b / 255, a);
     }
 
     // Draw background rectangle
-    gl.clear(gl.COLOR_BUFFER_BIT);
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
 
     // Draw the data points themselves
@@ -212,38 +218,13 @@ var Viewport = React.createClass({
     // vertex arrays into smaller sub arrays, then render them
     // using drawElements separately.
 
-    // Draw the red (normal) points
-    setColor(255, this.props.overpaintFactor, this.props.overpaintFactor, 0.9);
     if (this.props.normalIndicesArrays.length === 0) {
       return;
     }
-    for (let i = 0; i < this.ptArrays.length; i++) {
-      let pts = this.ptArrays[i];
-      var normalIndices = this.props.normalIndicesArrays[i];
 
-      Webgl.setVertexBuffer(gl, pts);
 
-      Webgl.setIndexBuffer(gl, normalIndices);
-
-      gl.drawElements(
-          gl.POINTS, normalIndices.length, gl.UNSIGNED_SHORT, canvas.indexBuffer);
-    }
-
-    // Set pen to black and clear the spots that were already red
-    gl.blendFunc(gl.ONE, gl.ZERO);
-    setColor(0, 0, 0, 1);
-    for (let i = 0; i < this.ptArrays.length; i++) {
-      let pts = this.ptArrays[i];
-      let highlightedIndices = this.props.highlightedIndicesArrays[i];
-
-      Webgl.setVertexBuffer(gl, pts);
-
-      Webgl.setIndexBuffer(gl, highlightedIndices);
-
-      gl.drawElements(
-          gl.POINTS, highlightedIndices.length, gl.UNSIGNED_SHORT, canvas.indexBuffer);
-    }
-
+    gl.stencilFunc(gl.GEQUAL, 3, 0xFFFF);
+    gl.stencilOp(gl.KEEP, gl.KEEP, gl.REPLACE);
     // Set the pen to blue and draw the highlighted points
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
     setColor(this.props.overpaintFactor, this.props.overpaintFactor, 255, 0.9);
@@ -256,6 +237,23 @@ var Viewport = React.createClass({
       Webgl.setIndexBuffer(gl, highlightedIndices);
       gl.drawElements(
           gl.POINTS, highlightedIndices.length, gl.UNSIGNED_SHORT, canvas.indexBuffer);
+    }
+
+
+    gl.stencilFunc(gl.GEQUAL, 2, 0xFFFF);
+    gl.stencilOp(gl.KEEP, gl.KEEP, gl.REPLACE);
+    // Draw the red (normal) points
+    setColor(255, this.props.overpaintFactor, this.props.overpaintFactor, 0.9);
+    for (let i = 0; i < this.ptArrays.length; i++) {
+      let pts = this.ptArrays[i];
+      var normalIndices = this.props.normalIndicesArrays[i];
+
+      Webgl.setVertexBuffer(gl, pts);
+
+      Webgl.setIndexBuffer(gl, normalIndices);
+
+      gl.drawElements(
+          gl.POINTS, normalIndices.length, gl.UNSIGNED_SHORT, canvas.indexBuffer);
     }
 
     // Draw the lines of the selection box
