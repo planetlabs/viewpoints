@@ -120,9 +120,9 @@ var Graph = React.createClass({
 
       for (var i = 0; i < minimumHighlightedIndices.length; i++) {
         var index = minimumHighlightedIndices[i];
+        var urlEnumValue = this.props.columns[this.state.xAxisSelectedIndex][index];
         var enumMap = this.props.enums[this.state.xAxisSelectedIndex];
-        // console.log("enum map", enumMap.get(index));
-        urls.push(enumMap.get(index));
+        urls.push(enumMap.get(urlEnumValue));
       }
 
       var mainDisplay = <div className="img-container">
