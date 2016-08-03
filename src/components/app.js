@@ -201,8 +201,8 @@ var App = React.createClass({
               overpaintFactor={this.state.overpaintFactor}
               pointSize={this.state.pointSize}/>
           <Sidebar onPointSizeChange={this._onPointSizeChange}
-              pointSize={this.state.pointSize}
               overpaintFactor={this.state.overpaintFactor}
+              pointSize={this.state.pointSize}
               onOverpaintFactorChange={this._onOverpaintFactorChange}/>
         </div>
       </div>);

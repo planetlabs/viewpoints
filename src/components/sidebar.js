@@ -18,6 +18,11 @@
 // limitations under the License.
 
 var React = require('react');
+var bootstrap = require('react-bootstrap');
+var Tabs = bootstrap.Tabs;
+var Tab = bootstrap.Tab;
+var Button = bootstrap.Button;
+var Glyphicon = bootstrap.Glyphicon;
 
 var Sidebar = React.createClass({
 
@@ -76,6 +81,14 @@ var Sidebar = React.createClass({
             </div>
           )
         })}
+        <div>
+          <Tabs defaultActiveKey={2} id="uncontrolled-tab-example">
+            <Tab eventKey={1} title="Red"></Tab>
+            <Tab eventKey={2} title="Blue">Tab 2 content</Tab>
+            <Tab eventKey={3} title="Yellow">Tab 3 content</Tab>
+            <Tab eventKey={4} title="Green">Tab 3 content</Tab>
+          </Tabs>
+        </div>
       </div>
     );
   }
