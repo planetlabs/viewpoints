@@ -75,7 +75,9 @@ var Graph = React.createClass({
       this.savedYAxisSelectedIndex = this.state.yAxisSelectedIndex;
       this.setState({
         xAxisSelectedIndex: index,
-        yOptions: [1, 4, 9],
+        yOptions: [
+          1, 4, 9, 16
+        ],
         yAxisSelectedIndex: 1,
         thumbnails: true
       });
@@ -116,7 +118,6 @@ var Graph = React.createClass({
           break
         }
       }
-      console.log("min highlighted indices", minimumHighlightedIndices);
 
       for (var i = 0; i < minimumHighlightedIndices.length; i++) {
         var index = minimumHighlightedIndices[i];
@@ -128,7 +129,7 @@ var Graph = React.createClass({
       var mainDisplay = <div className="img-container">
         {urls.map(function(element, index) {
           return (
-            <img className="thumb" src={element}/>
+            <img key={index} className="thumb" src={element}/>
           );
         })}
       </div>
