@@ -71,20 +71,19 @@ var Graphs = React.createClass({
 
   _keydown: function(event) {
     switch (event.which) {
-      case 73:
+      case 73: // 'i' key: invert
         this.setState({
           highlightedIndicesArrays: this.state.normalIndicesArrays,
           normalIndicesArrays: this.state.highlightedIndicesArrays
         });
         break;
-      case 88:
+      case 88: // 'x' key: delete
         this._deleteHighlighted();
         break;
 
       default:
         break;
     }
-    // console.log(event.which);
   },
 
   _keyup: function(event) {

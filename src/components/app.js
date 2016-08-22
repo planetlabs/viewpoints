@@ -1,10 +1,7 @@
 var React = require('react');
-
 var Graphs = require('./graphs');
 var Sidebar = require('./sidebar');
-
 var intern = require('../util/csv');
-
 var Papa = require('papaparse');
 
 var App = React.createClass({

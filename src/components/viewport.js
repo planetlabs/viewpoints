@@ -1,5 +1,6 @@
 var React = require('react');
 var Webgl = require('../util/webgl');
+var platform = require('platform');
 
 var Viewport = React.createClass({
 
@@ -377,8 +378,18 @@ var Viewport = React.createClass({
     var x = this._rawToNormalizedX(event);
     var y = this._rawToNormalizedY(event);
 
+    // Mac or linux
+    let panKeyDown = event.metaKey === true;
+    let zoomKeyDown = event.altKey === true;
+
+    if (platform.os.family.indexOf('Win') > -1) {
+      console.log('On a windows machine');
+      panKeyDown = event.altKey === true;
+      zoomKeyDown = event.ctrlKey === true;
+    }
+
     if (this.state.mouseIsDown === true) {
-      if (event.metaKey === true) {
+      if (panKeyDown) {
         // Pan
         let fracX = event.movementX / event.target.width * 2 / this.state.zoomX;
         let fracY = -event.movementY / event.target.height * 2 / this.state.zoomY;
@@ -388,7 +399,7 @@ var Viewport = React.createClass({
           translationY: this.state.translationY + fracY
         });
       }
-      else if (event.altKey === true) {
+      else if (zoomKeyDown) {
         // Zoom
         let fracX = event.movementX / event.target.width * 2;
         let fracY = -event.movementY / event.target.height * 2;
