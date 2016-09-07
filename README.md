@@ -8,7 +8,7 @@ Try it out [live!](https://mattferraro.github.io/viewpoints/)
 # To Run:
 
 ```
-git clone https://github.com/MattFerraro/viewpoints.git
+git clone https://github.com/planetlabs/viewpoints.git
 cd viewpoints
 export NODE_ENV=production    # optional, but makes it run faster
 npm install
