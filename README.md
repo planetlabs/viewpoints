@@ -3,7 +3,7 @@
 
 # To Preview:
 
-Try it out [live!](https://mattferraro.github.io/viewpoints/)
+Try it out [live!](https://planetlabs.github.io/viewpoints/)
 
 # To Run:
 
