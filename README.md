@@ -31,9 +31,11 @@ Alternatively, if we highlight just the stars with a high error in their right a
 
 ![Precessing Circles](http://i.imgur.com/aS3uQT4.jpg "Precessing Circles")
 
-#### CSV Compatibility
+#### Thumbnail Previews
 
-This implementation is compatible with any type of CSV provided the first line contains the column headers.
+Viewpoints will automatically recognize columns that contain links to thumbnails and show them to you in place of a scatter plot.
+
+![Yahoo Flickr Creative Commons 100M](http://i.imgur.com/Wg8H1FA.gif "Yahoo Flickr Creative Commons 100M")
 
 # To Preview:
 
