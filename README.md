@@ -41,7 +41,7 @@ Viewpoints will automatically recognize columns that contain links to thumbnails
 
 Try it out [live!](https://planetlabs.github.io/viewpoints/)
 
-When the page loads you'll see a button to upload a csv file. There are several interested data sets curated [here](https://github.com/MattFerraro/csv) and many more [here](https://catalog.data.gov/dataset?res_format=CSV)
+When the page loads you'll see a button to upload a csv file. There are several interesting data sets curated [on github](https://github.com/MattFerraro/csv) and many more [from data.gov](https://catalog.data.gov/dataset?res_format=CSV)
 
 # To Run:
 
