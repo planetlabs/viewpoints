@@ -37,13 +37,17 @@ Viewpoints will automatically recognize columns that contain links to thumbnails
 
 ![Yahoo Flickr Creative Commons 100M](http://i.imgur.com/Wg8H1FA.gif "Yahoo Flickr Creative Commons 100M")
 
-# To Preview:
+# To Use:
 
 Try it out [live!](https://planetlabs.github.io/viewpoints/)
 
 When the page loads you'll see a button to upload a csv file. There are several interesting data sets curated [on github](https://github.com/MattFerraro/csv) and many more [from data.gov](https://catalog.data.gov/dataset?res_format=CSV)
 
-# To Run:
+_Note: The data you use **never leaves your computer**. All processing happens on your local machine._
+
+# To Compile and Run:
+
+The tool is writtin using the [React](https://facebook.github.io/react/) framework. It is compiled using [Node](https://nodejs.org/en/) and [npm](https://docs.npmjs.com/getting-started/installing-node), which you must have pre-installed.
 
 ```
 git clone https://github.com/planetlabs/viewpoints.git
