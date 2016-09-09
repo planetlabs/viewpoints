@@ -1,6 +1,8 @@
 # Viewpoints
 [Viewpoints](http://iopscience.iop.org/article/10.1086/657902/pdf) is an open source desktop tool, developed at NASA, for visualizing high dimensionality data using linked scatter plots. This repo is a re-implementation of Viewpoints as a web application, making heavy use of WebGL.
 
+![In Action](http://i.imgur.com/CWa3XXR.gifv "In Action")
+
 ## Features
 
 #### Large Data Sets
