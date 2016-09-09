@@ -39,6 +39,8 @@ This implementation is compatible with any type of CSV provided the first line c
 
 Try it out [live!](https://planetlabs.github.io/viewpoints/)
 
+When the page loads you'll see a button to upload a csv file. There are several interested data sets curated [here](https://github.com/MattFerraro/csv) and many more [here](https://catalog.data.gov/dataset?res_format=CSV)
+
 # To Run:
 
 ```
