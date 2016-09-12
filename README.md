@@ -10,15 +10,6 @@ Viewpoints is designed to handle extremely large data sets such as the entire Ty
 
 ![The Milky Way](http://i.imgur.com/dsUIqva.jpg "The Milky Way")
 
-#### Pan and Zoom
-
-To Pan: click and drag while holding `⌘` (Windows use `windows key`)
-
-To Zoom, click and drag while holding `alt` (Windows use `ctrl`).
-
-![The Milky Way, Zoomed](http://i.imgur.com/ep58Wi4.jpg "The Milky Way, Zoomed")
-
-
 #### Linked Highlighting
 
 The primary feature of Viewpoints is that highlighting points on one graph will highlight those same points on all other graphs. This allows for deep data exploration and the discovery of trends that would otherwise not be visible.
@@ -36,6 +27,14 @@ Alternatively, if we highlight just the stars with a high error in their right a
 Viewpoints will automatically recognize columns that contain links to thumbnails and show them to you in place of a scatter plot.
 
 ![Yahoo Flickr Creative Commons 100M](http://i.imgur.com/Wg8H1FA.gif "Yahoo Flickr Creative Commons 100M")
+
+#### Pan and Zoom
+
+To Pan: click and drag while holding `⌘` (Windows use `windows key`)
+
+To Zoom, click and drag while holding `alt` (Windows use `ctrl`).
+
+![The Milky Way, Zoomed](http://i.imgur.com/ep58Wi4.jpg "The Milky Way, Zoomed")
 
 # To Use:
 
