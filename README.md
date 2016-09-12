@@ -10,7 +10,7 @@ Viewpoints is designed to handle extremely large data sets such as the entire Ty
 
 ![The Milky Way](http://i.imgur.com/dsUIqva.jpg "The Milky Way")
 
-#### Linked Highlighting
+#### Fast Linked Highlighting
 
 The primary feature of Viewpoints is that highlighting points on one graph will highlight those same points on all other graphs. This allows for deep data exploration and the discovery of trends that would otherwise not be visible.
 
@@ -21,6 +21,8 @@ For example, if we highlight just the stars of a certain color (the bottom quart
 Alternatively, if we highlight just the stars with a high error in their right ascension measurement (right side of the bottom right graph), we tease out the precessing circles that characterize the observation pattern of the telescopes that created the catalog.
 
 ![Precessing Circles](http://i.imgur.com/aS3uQT4.jpg "Precessing Circles")
+
+Linked highlighting is designed to work extremely quickly--introducing < 100 ms of latency on most systems for most data sets.
 
 #### Thumbnail Previews
 
