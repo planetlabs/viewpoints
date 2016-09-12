@@ -26,7 +26,7 @@ Linked highlighting is designed to work extremely quickly--introducing < 100 ms 
 
 #### Thumbnail Previews
 
-Viewpoints will automatically recognize columns that contain links to thumbnails and show them to you in place of a scatter plot.
+If your dataset contains columns which are links to thumbnails, Viewpoints will automatically recognize them and show you thumbnails in place of a scatter plot. To trigger this behavior, set the X axis of one of the scatter plots to the thumbnail column you want to view. This is especially helpful for data sets relating to deep CNN's.
 
 ![Yahoo Flickr Creative Commons 100M](http://i.imgur.com/Wg8H1FA.gif "Yahoo Flickr Creative Commons 100M")
 
