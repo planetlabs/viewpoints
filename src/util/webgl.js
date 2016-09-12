@@ -1,19 +1,74 @@
+
+/*
+ * Copyright 2012, Gregg Tavares.
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are
+ * met:
+ *
+ *     * Redistributions of source code must retain the above copyright
+ * notice, this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above
+ * copyright notice, this list of conditions and the following disclaimer
+ * in the documentation and/or other materials provided with the
+ * distribution.
+ *     * Neither the name of Gregg Tavares. nor the names of his
+ * contributors may be used to endorse or promote products derived from
+ * this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+// File name: webgl.js
+// Description: A set of webgl boilerplate functions that make it easier
+// to use webgl. Several functions were lifted from Gregg Tavares's
+// excellent webgl series, available here:
+// http://webglfundamentals.org/webgl/lessons/webgl-boilerplate.html
+
+// Copyright 2016 Planet Labs Inc.
+
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+
+//   http://www.apache.org/licenses/LICENSE-2.0
+
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+// implied. See the License for the specific language governing permissions and
+// limitations under the License.
+
 function initWebGL(canvas) {
-    let gl = null;
+  let gl = null;
 
-    try {
-    // Try to grab the standard context. If it fails, fallback to experimental.
-        gl = canvas.getContext("webgl", {stencil: true}) || canvas.getContext("experimental-webgl", {stencil: true});
-    }
-    catch(e) {}
+  try {
+  // Try to grab the standard context. If it fails, fallback to experimental.
+    gl = canvas.getContext(
+      'webgl', {stencil: true}) || canvas.getContext('experimental-webgl', {stencil: true});
+  }
+  catch (e) {
 
-    // If we don't have a GL context, give up now
-    if (!gl) {
-        console.log("Unable to initialize WebGL. Your browser may not support it.");
-        gl = null;
-    }
+  }
 
-    return gl;
+  // If we don't have a GL context, give up now
+  if (!gl) {
+    console.log('Unable to initialize WebGL. Your browser may not support it.');
+    gl = null;
+  }
+
+  return gl;
 }
 
 /**
@@ -54,12 +109,12 @@ function createShaderFromScript(gl, shaderSource, opt_shaderType) {
   // If we didn't pass in a type, use the 'type' from
   // the script tag.
   if (!opt_shaderType) {
-    if (shaderScript.type == "x-shader/x-vertex") {
+    if (shaderScript.type == 'x-shader/x-vertex') {
       opt_shaderType = gl.VERTEX_SHADER;
-    } else if (shaderScript.type == "x-shader/x-fragment") {
+    } else if (shaderScript.type == 'x-shader/x-fragment') {
       opt_shaderType = gl.FRAGMENT_SHADER;
     } else if (!opt_shaderType) {
-      throw("*** Error: shader type not set");
+      throw ('*** Error: shader type not set');
     }
   }
   return compileShader(gl, shaderSource, opt_shaderType);
@@ -89,7 +144,7 @@ function createProgram(gl, vertexShader, fragmentShader) {
   var success = gl.getProgramParameter(program, gl.LINK_STATUS);
   if (!success) {
       // something went wrong with the link
-      throw ("program filed to link:" + gl.getProgramInfoLog (program));
+    throw ('program filed to link:' + gl.getProgramInfoLog (program));
   }
 
   return program;
@@ -118,7 +173,7 @@ function compileShader(gl, shaderSource, shaderType) {
   var success = gl.getShaderParameter(shader, gl.COMPILE_STATUS);
   if (!success) {
     // Something went wrong during compilation; get the error
-    throw "could not compile shader:" + gl.getShaderInfoLog(shader);
+    throw 'could not compile shader:' + gl.getShaderInfoLog(shader);
   }
 
   return shader;
@@ -131,12 +186,12 @@ function setRectangle(gl, x, y, width, height) {
   var y1 = y;
   var y2 = y + height;
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
-     x1, y1,
-     x2, y1,
-     x1, y2,
-     x1, y2,
-     x2, y1,
-     x2, y2]), gl.STATIC_DRAW);
+    x1, y1,
+    x2, y1,
+    x1, y2,
+    x1, y2,
+    x2, y1,
+    x2, y2]), gl.STATIC_DRAW);
 }
 
 function setVertexBuffer(gl, pts) {
