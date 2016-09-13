@@ -21,10 +21,19 @@ var Graphs = require('./graphs');
 var Sidebar = require('./sidebar');
 var intern = require('../util/csv');
 var Papa = require('papaparse');
+var url = require('url');
+var querystring = require('querystring');
 
 var App = React.createClass({
 
   getInitialState: function() {
+
+    let urlArgs = url.parse(window.location.href);
+    let args = querystring.parse(urlArgs.query);
+    if ('csv' in args) {
+      this._parseCsv(args.csv);
+    }
+
     return {
       columns: [],
       options: [],
@@ -36,42 +45,78 @@ var App = React.createClass({
   },
 
   _onUploadChange: function(event) {
+    this._parseCsv(event.target.files[0]);
+  },
+
+  _parseCsv: function(fileOrUrl) {
 
     var headings = [];
     var columns = [];
     var enums = [];
+    let config = {};
 
-    var config = {
-      header: false,
-      dynamicTyping: true,
-      chunk: function(dat) {
-        if (headings.length === 0) {
-          headings = dat.data.shift();
-
+    if (typeof fileOrUrl == 'string') {
+      // it's a url
+      config = {
+        header: false,
+        download: true,
+        dynamicTyping: true,
+        complete: function(data) {
+          headings = data.data.shift();
+          let rows = data.data;
           columns = headings.map(function(x) {
             return [];
           });
-        }
 
-        for (var j = 0; j < dat.data.length; j++) {
-          for (var i = 0; i < columns.length; i++) {
-            columns[i].push(dat.data[j][i]);
+          for (let i = 0; i < headings.length; i++) {
+            for (let j = 0; j < rows.length; j++) {
+              columns[i].push(rows[j][i]);
+            }
           }
-        }
-      },
-      complete: function() {
-        for (var i = 0; i < columns.length; i++) {
-          var newCol = intern(columns[i]);
-          columns[i] = newCol.newColumn;
-          enums.push(newCol.enums);
-        }
 
-        this._onReaderLoad(headings, columns, enums);
-      }.bind(this),
-      skipEmptyLines: true
-    };
+          for (let i = 0; i < columns.length; i++) {
+            let newCol = intern(columns[i]);
+            columns[i] = newCol.newColumn;
+            enums.push(newCol.enums);
+          }
+          this._onReaderLoad(headings, columns, enums);
+        }.bind(this),
+        skipEmptyLines: true
+      };
+    } else {
+      config = {
+        header: false,
+        dynamicTyping: true,
+        chunk: function(dat) {
+          if (headings.length === 0) {
+            headings = dat.data.shift();
 
-    Papa.parse(event.target.files[0], config);
+            columns = headings.map(function(x) {
+              return [];
+            });
+          }
+
+          for (var j = 0; j < dat.data.length; j++) {
+            for (var i = 0; i < columns.length; i++) {
+              columns[i].push(dat.data[j][i]);
+            }
+          }
+        },
+        complete: function() {
+          for (var i = 0; i < columns.length; i++) {
+            var newCol = intern(columns[i]);
+            columns[i] = newCol.newColumn;
+            enums.push(newCol.enums);
+          }
+
+          this._onReaderLoad(headings, columns, enums);
+        }.bind(this),
+        skipEmptyLines: true
+      };
+    }
+
+    Papa.parse(fileOrUrl, config);
+
   },
 
   _onReaderLoad: function(headings, columns, enums) {
