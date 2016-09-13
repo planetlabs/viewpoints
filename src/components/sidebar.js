@@ -31,6 +31,8 @@ var Sidebar = React.createClass({
     overpaintFactor: React.PropTypes.number,
     onOverpaintFactorChange: React.PropTypes.func,
     pointSize: React.PropTypes.number,
+    activeHighlight: React.PropTypes.number,
+    onHighlightChanged: React.PropTypes.func
   },
 
   _onPointSizeChange: function(event) {
@@ -82,11 +84,11 @@ var Sidebar = React.createClass({
           )
         })}
         <div>
-          <Tabs defaultActiveKey={2} id="uncontrolled-tab-example">
-            <Tab eventKey={1} title="Red"></Tab>
+          <Tabs activeKey={this.props.activeHighlight+1} onSelect={this.props.onHighlightChanged} id="controlled-tab">
+            <Tab eventKey={1} title="Red">:)</Tab>
             <Tab eventKey={2} title="Blue">Tab 2 content</Tab>
-            <Tab eventKey={3} title="Yellow">Tab 3 content</Tab>
-            <Tab eventKey={4} title="Green">Tab 3 content</Tab>
+            <Tab eventKey={3} title="Green">Tab 3 content</Tab>
+            <Tab eventKey={4} title="Yellow">Hello</Tab>
           </Tabs>
         </div>
       </div>

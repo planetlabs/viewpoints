@@ -24,12 +24,11 @@ var Graph = React.createClass({
 
   propTypes: {
     axesClassName: React.PropTypes.string,
+    brushes: React.PropTypes.array,
     className: React.PropTypes.string,
     columns: React.PropTypes.array,
     enums: React.PropTypes.array,
     highlightFunction: React.PropTypes.func,
-    highlightedIndicesArrays: React.PropTypes.array,
-    normalIndicesArrays: React.PropTypes.array,
     options: React.PropTypes.arrayOf(React.PropTypes.string),
     overpaintFactor: React.PropTypes.number,
     pointSize: React.PropTypes.number,
@@ -123,16 +122,18 @@ var Graph = React.createClass({
       var urls = [];
 
       var minimumHighlightedIndices = [];
-      for (let i = 0; i < this.props.highlightedIndicesArrays.length; i++) {
-        var highlightedIndices = this.props.highlightedIndicesArrays[i];
-        for (var j = 0; j < highlightedIndices.length; j++) {
-          minimumHighlightedIndices.push(highlightedIndices[j] + i * maxPerArray);
+      for (let b = 0; b < this.props.brushes.length; b++) {
+        for (let i = 0; i < this.props.brushes[b].length; i++) {
+          var highlightedIndices = this.props.brushes[b][i];
+          for (var j = 0; j < highlightedIndices.length; j++) {
+            minimumHighlightedIndices.push(highlightedIndices[j] + i * maxPerArray);
+            if (minimumHighlightedIndices.length == numThumbs) {
+              break
+            }
+          }
           if (minimumHighlightedIndices.length == numThumbs) {
             break
           }
-        }
-        if (minimumHighlightedIndices.length == numThumbs) {
-          break
         }
       }
 
@@ -158,8 +159,7 @@ var Graph = React.createClass({
           enums={this.props.enums}
           height={this.state.viewportHeight}
           highlightFunction={this.props.highlightFunction}
-          highlightedIndicesArrays={this.props.highlightedIndicesArrays}
-          normalIndicesArrays={this.props.normalIndicesArrays}
+          brushes={this.props.brushes}
           options={this.props.options}
           overpaintFactor={this.props.overpaintFactor}
           pointSize={this.props.pointSize}

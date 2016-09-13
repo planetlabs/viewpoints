@@ -42,7 +42,8 @@ var App = React.createClass({
       loadPercent: 0,
       graphCount: 0,
       pointSize: 2,
-      overpaintFactor: 3
+      overpaintFactor: 3,
+      activeHighlight: 1
     };
   },
 
@@ -178,6 +179,12 @@ var App = React.createClass({
     this.setState({overpaintFactor: factor});
   },
 
+  _onHighlightChanged: function(newHighlightKey) {
+    newHighlightKey -= 1; // correct for stupid off by 1 behavior
+    // that comes with react-bootstrap's implementation of tabs
+    this.setState({activeHighlight: newHighlightKey});
+  },
+
   render: function() {
     return (
       <div className="vp-app">
@@ -193,7 +200,9 @@ var App = React.createClass({
           </div>}
         </div>
         <div className="vp-content">
-          <Graphs columns={this.state.columns}
+          <Graphs
+              activeHighlight={this.state.activeHighlight}
+              columns={this.state.columns}
               count={this.state.graphCount}
               enums={this.state.enums}
               onColumnsChanged={this._onColumnsChanged}
@@ -201,6 +210,8 @@ var App = React.createClass({
               overpaintFactor={this.state.overpaintFactor}
               pointSize={this.state.pointSize}/>
           <Sidebar onPointSizeChange={this._onPointSizeChange}
+              activeHighlight={this.state.activeHighlight}
+              onHighlightChanged={this._onHighlightChanged}
               overpaintFactor={this.state.overpaintFactor}
               pointSize={this.state.pointSize}
               onOverpaintFactorChange={this._onOverpaintFactorChange}/>
