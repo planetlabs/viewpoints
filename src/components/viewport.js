@@ -24,12 +24,11 @@ var platform = require('platform');
 var Viewport = React.createClass({
 
   propTypes: {
+    brushes: React.PropTypes.array,
     columns: React.PropTypes.array,
     enums: React.PropTypes.array,
     height: React.PropTypes.number,
     highlightFunction: React.PropTypes.func,
-    highlightedIndicesArrays: React.PropTypes.array,
-    normalIndicesArrays: React.PropTypes.array,
     options: React.PropTypes.arrayOf(React.PropTypes.string),
     overpaintFactor: React.PropTypes.number,
     pointSize: React.PropTypes.number,
@@ -238,43 +237,58 @@ var Viewport = React.createClass({
     // vertex arrays into smaller sub arrays, then render them
     // using drawElements separately.
 
-    if (this.props.normalIndicesArrays.length === 0) {
+    if (this.props.brushes.length === 0) {
       return;
     }
 
-
-    gl.stencilFunc(gl.GEQUAL, 3, 0xFFFF);
     gl.stencilOp(gl.KEEP, gl.KEEP, gl.REPLACE);
-    // Set the pen to blue and draw the highlighted points
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
-    setColor(this.props.overpaintFactor, this.props.overpaintFactor, 255, 0.9);
-    for (let i = 0; i < this.ptArrays.length; i++) {
-      let pts = this.ptArrays[i];
-      let highlightedIndices = this.props.highlightedIndicesArrays[i];
 
-      Webgl.setVertexBuffer(gl, pts);
+    let colors = [
+      [255, this.props.overpaintFactor, this.props.overpaintFactor, 0.9],
+      [this.props.overpaintFactor, this.props.overpaintFactor, 255, 0.9],
+      [this.props.overpaintFactor, 255, this.props.overpaintFactor, 0.9],
+      [255, 255, this.props.overpaintFactor, 0.9]
+    ];
 
-      Webgl.setIndexBuffer(gl, highlightedIndices);
-      gl.drawElements(
-          gl.POINTS, highlightedIndices.length, gl.UNSIGNED_SHORT, canvas.indexBuffer);
+    for (let b = this.props.brushes.length - 1; b >= 0; b--) {
+      let brush = this.props.brushes[b];
+      let color = colors[b];
+      gl.stencilFunc(gl.GEQUAL, b, 0xFFFF);
+
+      // Set the pen color and draw the highlighted points
+      // setColor(this.props.overpaintFactor, this.props.overpaintFactor, 255, 0.9);
+      setColor(color[0], color[1], color[2], color[3]);
+
+      let numH = 0;
+      for (let i = 0; i < this.ptArrays.length; i++) {
+        let pts = this.ptArrays[i];
+        let highlightedIndices = brush[i];
+        numH += highlightedIndices.length;
+
+        Webgl.setVertexBuffer(gl, pts);
+
+        Webgl.setIndexBuffer(gl, highlightedIndices);
+        gl.drawElements(
+            gl.POINTS, highlightedIndices.length, gl.UNSIGNED_SHORT, canvas.indexBuffer);
+      }
     }
 
+    // gl.stencilFunc(gl.GEQUAL, 2, 0xFFFF);
+    // gl.stencilOp(gl.KEEP, gl.KEEP, gl.REPLACE);
+    // // Draw the red (normal) points
+    // setColor(255, this.props.overpaintFactor, this.props.overpaintFactor, 0.9);
+    // for (let i = 0; i < this.ptArrays.length; i++) {
+    //   let pts = this.ptArrays[i];
+    //   var normalIndices = this.props.normalIndicesArrays[i];
 
-    gl.stencilFunc(gl.GEQUAL, 2, 0xFFFF);
-    gl.stencilOp(gl.KEEP, gl.KEEP, gl.REPLACE);
-    // Draw the red (normal) points
-    setColor(255, this.props.overpaintFactor, this.props.overpaintFactor, 0.9);
-    for (let i = 0; i < this.ptArrays.length; i++) {
-      let pts = this.ptArrays[i];
-      var normalIndices = this.props.normalIndicesArrays[i];
+    //   Webgl.setVertexBuffer(gl, pts);
 
-      Webgl.setVertexBuffer(gl, pts);
+    //   Webgl.setIndexBuffer(gl, normalIndices);
 
-      Webgl.setIndexBuffer(gl, normalIndices);
-
-      gl.drawElements(
-          gl.POINTS, normalIndices.length, gl.UNSIGNED_SHORT, canvas.indexBuffer);
-    }
+    //   gl.drawElements(
+    //       gl.POINTS, normalIndices.length, gl.UNSIGNED_SHORT, canvas.indexBuffer);
+    // }
 
     // Draw the lines of the selection box
     if (this.state.mouseIsDown) {
