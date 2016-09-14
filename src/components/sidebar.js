@@ -22,6 +22,7 @@ var bootstrap = require('react-bootstrap');
 var Tabs = bootstrap.Tabs;
 var Tab = bootstrap.Tab;
 var Button = bootstrap.Button;
+var ButtonGroup = bootstrap.ButtonGroup;
 var Glyphicon = bootstrap.Glyphicon;
 
 var Sidebar = React.createClass({
@@ -72,6 +73,19 @@ var Sidebar = React.createClass({
       }
     ];
 
+    var redGlyph = (<Glyphicon glyph="tint" className='red'/>);
+    var blueGlyph = (<Glyphicon glyph="tint" className='blue'/>);
+    var greenGlyph = (<Glyphicon glyph="tint" className='green'/>);
+    var yellowGlyph = (<Glyphicon glyph="tint" className='yellow'/>);
+
+    var inside = (
+      <ButtonGroup>
+        <Button>Left</Button>
+        <Button>Middle</Button>
+        <Button>Right</Button>
+      </ButtonGroup>
+    )
+
     return (
       <div className="vp-sidebar">
         {items.map(function(item, index) {
@@ -85,10 +99,10 @@ var Sidebar = React.createClass({
         })}
         <div>
           <Tabs activeKey={this.props.activeHighlight+1} onSelect={this.props.onHighlightChanged} id="controlled-tab">
-            <Tab eventKey={1} title="Red">:)</Tab>
-            <Tab eventKey={2} title="Blue">Tab 2 content</Tab>
-            <Tab eventKey={3} title="Green">Tab 3 content</Tab>
-            <Tab eventKey={4} title="Yellow">Hello</Tab>
+            <Tab eventKey={1} title={redGlyph}>{inside}</Tab>
+            <Tab eventKey={2} title={blueGlyph}>{inside}</Tab>
+            <Tab eventKey={3} title={greenGlyph}>{inside}</Tab>
+            <Tab eventKey={4} title={yellowGlyph}>{inside}</Tab>
           </Tabs>
         </div>
       </div>
