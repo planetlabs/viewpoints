@@ -34,17 +34,17 @@ limitations under the License.
     bottom: 0;
   }
   .vp-graph-axes {
+    display: flex;
+    align-items: center;
     flex-shrink: 0;
     padding: @padding-small @padding-base;
+    span {
+      padding: 0 @padding-small;
+    }
+    .vp-dropdown {
+      flex-grow: 1;
+    }
   }
-
-  div {
-    flex-grow: 0;
-  }
-  .bootstrap-typeahead {
-    width: 35%;
-  }
-
   .vp-graph-viewport {
     flex-grow: 1;
   }

@@ -44,7 +44,7 @@ var Dropdown = React.createClass({
     let selected = [taOptions[this.props.selectedIndex]];
 
     return (
-      <div>
+      <div className="vp-dropdown">
         <Typeahead
             options={taOptions}
             selected={selected}
