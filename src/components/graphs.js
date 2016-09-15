@@ -21,6 +21,7 @@ var React = require('react');
 var Graph = require('./graph');
 var chunk = require('lodash/chunk');
 var difference = require('lodash/difference');
+var intersection = require('lodash/intersection');
 var flatten = require('lodash/flatten');
 var maxPerArray = 65530;
 var numBrushes = 4;
@@ -62,12 +63,14 @@ var Graphs = React.createClass({
     count: React.PropTypes.number,
     enums: React.PropTypes.array,
     graphClassName: React.PropTypes.string,
+    greenBrushOverIndex: React.PropTypes.number,
     onColumnsChanged: React.PropTypes.func,
     options: React.PropTypes.arrayOf(React.PropTypes.string),
     overpaintFactor: React.PropTypes.number,
     pointSize: React.PropTypes.number,
     rowClassName: React.PropTypes.string,
-    viewportClassName: React.PropTypes.string
+    viewportClassName: React.PropTypes.string,
+    yellowBrushOverIndex: React.PropTypes.number
   },
 
   getInitialState() {
@@ -123,10 +126,6 @@ var Graphs = React.createClass({
   _keydown: function(event) {
     switch (event.which) {
       case 73: // 'i' key: invert
-        // this.setState({
-        //   highlightedIndicesArrays: this.state.normalIndicesArrays,
-        //   normalIndicesArrays: this.state.highlightedIndicesArrays
-        // });
         this._invertSelection();
         break;
       case 88: // 'x' key: delete
@@ -184,12 +183,12 @@ var Graphs = React.createClass({
     var nCounts = 0;
     var hCounts = 0;
 
-    for (var i = 0; i < ptArrays.length; i++) {
+    for (let i = 0; i < ptArrays.length; i++) {
       var pts = ptArrays[i];
       var normalIndices = [];
       var highlightedIndices = [];
 
-      for (var j = 0; j < pts.length; j += 2) {
+      for (let j = 0; j < pts.length; j += 2) {
         var x = pts[j];
         var y = pts[j + 1];
 
@@ -202,7 +201,24 @@ var Graphs = React.createClass({
           nCounts++;
         }
       }
-      highlightedIndicesArrays.push(new Uint16Array(highlightedIndices));
+      highlightedIndicesArrays.push(highlightedIndices);
+    }
+
+    if (this.props.activeHighlight == 3) {
+      let andBucket = this.state.brushes[this.props.yellowBrushOverIndex];
+
+      for (let i = 0; i < andBucket.length; i++) {
+        let subAndBucket = andBucket[i];
+        let subHighlighted = highlightedIndicesArrays[i];
+
+        let intersect = intersection(subAndBucket, subHighlighted);
+
+        highlightedIndicesArrays[i] = intersect;
+      }
+    }
+
+    for (let i = 0; i < highlightedIndicesArrays.length; i++) {
+      highlightedIndicesArrays[i] = new Uint16Array(highlightedIndicesArrays[i]);
     }
 
     let newBrushes = [];
