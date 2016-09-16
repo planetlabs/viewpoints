@@ -115,6 +115,15 @@ var Graph = React.createClass({
     this.setState({yAxisSelectedIndex: index});
   },
 
+  _swapAxes: function() {
+    let x = this.state.xAxisSelectedIndex;
+    let y = this.state.yAxisSelectedIndex;
+    this.setState({
+      xAxisSelectedIndex: y,
+      yAxisSelectedIndex: x
+    });
+  },
+
   render: function() {
     if (this.state.thumbnails) {
       var maxPerArray = 65530;  // TODO: pull this into a global variable
@@ -177,7 +186,7 @@ var Graph = React.createClass({
               options={this.state.xOptions}
               ref="xaxis"
               selectedIndex={this.state.xAxisSelectedIndex}/>
-          <span> vs </span>
+          <button className="swap-button" onClick={this._swapAxes}> vs </button>
           <Dropdown onSelect={this._onYAxisSelect}
               options={this.state.yOptions}
               ref="yaxis"
