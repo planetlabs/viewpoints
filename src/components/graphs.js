@@ -19,10 +19,8 @@
 
 var React = require('react');
 var Graph = require('./graph');
-var chunk = require('lodash/chunk');
 var difference = require('lodash/difference');
 var intersection = require('lodash/intersection');
-var flatten = require('lodash/flatten');
 var maxPerArray = 65530;
 var numBrushes = 4;
 
@@ -204,9 +202,16 @@ var Graphs = React.createClass({
       highlightedIndicesArrays.push(highlightedIndices);
     }
 
+    let andBucket = [];
     if (this.props.activeHighlight == 3) {
-      let andBucket = this.state.brushes[this.props.yellowBrushOverIndex];
+      andBucket = this.state.brushes[this.props.yellowBrushOverIndex];
+    }
 
+    if (this.props.activeHighlight == 2) {
+      andBucket = this.state.brushes[this.props.greenBrushOverIndex];
+    }
+
+    if (this.props.activeHighlight >= 2) {
       for (let i = 0; i < andBucket.length; i++) {
         let subAndBucket = andBucket[i];
         let subHighlighted = highlightedIndicesArrays[i];

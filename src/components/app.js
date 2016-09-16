@@ -186,9 +186,14 @@ var App = React.createClass({
   },
 
   _setYellowBrushOver: function(index) {
-    console.log("set yellow brushover in app.js", index);
     this.setState({
       yellowBrushOverIndex: parseFloat(index)
+    });
+  },
+
+  _setGreenBrushOver: function(index) {
+    this.setState({
+      greenBrushOverIndex: parseFloat(index)
     });
   },
 
@@ -225,6 +230,7 @@ var App = React.createClass({
               pointSize={this.state.pointSize}
               yellowBrushOverIndex={this.state.yellowBrushOverIndex}
               setYellowBrushOver={this._setYellowBrushOver}
+              setGreenBrushOver={this._setGreenBrushOver}
               greenBrushOverIndex={this.state.greenBrushOverIndex}
               onOverpaintFactorChange={this._onOverpaintFactorChange}/>
         </div>
