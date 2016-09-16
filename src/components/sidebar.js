@@ -36,7 +36,8 @@ var Sidebar = React.createClass({
     onHighlightChanged: React.PropTypes.func,
     yellowBrushOverIndex: React.PropTypes.number,
     greenBrushOverIndex: React.PropTypes.number,
-    setYellowBrushOver: React.PropTypes.func
+    setYellowBrushOver: React.PropTypes.func,
+    setGreenBrushOver: React.PropTypes.func
   },
 
   _onPointSizeChange: function(event) {
@@ -48,7 +49,6 @@ var Sidebar = React.createClass({
   },
 
   _setYellowBrushOverIndex: function(index) {
-    console.log("setting yellow brush over index", index);
     this.props.setYellowBrushOver(index);
   },
 
@@ -102,7 +102,7 @@ var Sidebar = React.createClass({
       <div>
         <div className="vp-sidebar-item-label">Select From</div>
         <ButtonGroup>
-          <Button active>{redGlyph}</Button>
+          <Button disabled>{redGlyph}</Button>
           <Button disabled>{blueGlyph}</Button>
           <Button disabled>{greenGlyph}</Button>
           <Button disabled>{yellowGlyph}</Button>
@@ -114,9 +114,9 @@ var Sidebar = React.createClass({
       <div>
         <div className="vp-sidebar-item-label">Select From</div>
         <ButtonGroup>
-          <Button active>{redGlyph}</Button>
-          <Button>{blueGlyph}</Button>
-          <Button disabed>{greenGlyph}</Button>
+          <Button value='0' onClick={() => this.props.setGreenBrushOver('0')}>{redGlyph}</Button>
+          <Button value='1' onClick={() => this.props.setGreenBrushOver('1')}>{blueGlyph}</Button>
+          <Button disabled>{greenGlyph}</Button>
           <Button disabled>{yellowGlyph}</Button>
         </ButtonGroup>
       </div>
@@ -126,9 +126,9 @@ var Sidebar = React.createClass({
       <div>
         <div className="vp-sidebar-item-label">Select From</div>
         <ButtonGroup>
-          <Button value='0' onClick={() => this._setYellowBrushOverIndex('0')}>{redGlyph}</Button>
-          <Button value='1' onClick={() => this._setYellowBrushOverIndex('1')}>{blueGlyph}</Button>
-          <Button value='2' onClick={() => this._setYellowBrushOverIndex('2')}>{greenGlyph}</Button>
+          <Button value='0' onClick={() => this.props.setYellowBrushOver('0')}>{redGlyph}</Button>
+          <Button value='1' onClick={() => this.props.setYellowBrushOver('1')}>{blueGlyph}</Button>
+          <Button value='2' onClick={() => this.props.setYellowBrushOver('2')}>{greenGlyph}</Button>
           <Button disabled>{yellowGlyph}</Button>
         </ButtonGroup>
       </div>
