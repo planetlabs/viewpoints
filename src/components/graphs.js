@@ -77,11 +77,13 @@ var Graphs = React.createClass({
 
   componentDidUpdate(prevProps, prevState) {
     if (this.state.normalIndicesArrays.length === 0) {
-      var indicesArrays = unselectAll(this.props.columns[0].length);
-      this.setState({
-        normalIndicesArrays: indicesArrays[0],
-        highlightedIndicesArrays: indicesArrays[1]
-      });
+      if (this.props.columns.length > 0) {
+        var indicesArrays = unselectAll(this.props.columns[0].length);
+        this.setState({
+          normalIndicesArrays: indicesArrays[0],
+          highlightedIndicesArrays: indicesArrays[1]
+        });
+      }
     }
   },
 

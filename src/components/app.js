@@ -23,6 +23,7 @@ var intern = require('../util/csv');
 var Papa = require('papaparse');
 var url = require('url');
 var querystring = require('querystring');
+var ProgressBar = require('react-progress-bar-plus');
 
 var App = React.createClass({
 
@@ -38,6 +39,7 @@ var App = React.createClass({
       columns: [],
       options: [],
       enums: [],
+      loadPercent: 0,
       graphCount: 0,
       pointSize: 2,
       overpaintFactor: 3
@@ -48,12 +50,19 @@ var App = React.createClass({
     this._parseCsv(event.target.files[0]);
   },
 
+  _updateProgressBar: function(percent) {
+    this.setState({
+      loadPercent: percent,
+    });
+  },
+
   _parseCsv: function(fileOrUrl) {
 
     var headings = [];
     var columns = [];
     var enums = [];
     let config = {};
+    var fileSize = 0;
 
     if (typeof fileOrUrl == 'string') {
       // it's a url
@@ -84,6 +93,11 @@ var App = React.createClass({
         skipEmptyLines: true
       };
     } else {
+      fileSize = fileOrUrl.size
+      var bigFile = (fileSize > Papa.LocalChunkSize)
+      var nChunks = Math.floor(fileSize / (Papa.LocalChunkSize*1.0))
+      var iChunk = 0
+      var percentDone = 0
       config = {
         header: false,
         dynamicTyping: true,
@@ -96,12 +110,28 @@ var App = React.createClass({
             });
           }
 
+          if (bigFile) {
+            iChunk += 1;
+            percentDone = Math.min(
+              100,
+              Math.round(iChunk / (1.0 * nChunks) * 100)
+            );
+            this._updateProgressBar(percentDone)
+          }
+
+          var checkpoint_mod = Math.round(dat.data.length / 100)
           for (var j = 0; j < dat.data.length; j++) {
+            if (!bigFile) {
+              percentDone = Math.round(j / dat.data.length * 100);
+              if ((j % checkpoint_mod) == 0) {
+                this._updateProgressBar(percentDone)
+              }
+            }
             for (var i = 0; i < columns.length; i++) {
               columns[i].push(dat.data[j][i]);
             }
           }
-        },
+        }.bind(this),
         complete: function() {
           for (var i = 0; i < columns.length; i++) {
             var newCol = intern(columns[i]);
@@ -152,6 +182,7 @@ var App = React.createClass({
     return (
       <div className="vp-app">
         <div className="vp-header">
+          <ProgressBar spinner={false} percent={this.state.loadPercent}/>
           <div className="vp-header-item vp-upload">
             <span>Upload a new dataset</span>
             <input accept=".csv" onChange={this._onUploadChange} type="file"/>
