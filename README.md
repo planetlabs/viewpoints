@@ -40,7 +40,7 @@ To Zoom, click and drag while holding `alt` (Windows use `ctrl`).
 
 # To Use:
 
-Try it out [live!](https://planetlabs.github.io/viewpoints/)
+Try it out [live!](https://planetlabs.github.io/viewpoints/?csv=https://raw.githubusercontent.com/MattFerraro/csv/master/inline_skating.csv)
 
 When the page loads you'll see a button to upload a csv file. There are several interesting data sets curated [on github](https://github.com/MattFerraro/csv) and many more [from data.gov](https://catalog.data.gov/dataset?res_format=CSV)
 
