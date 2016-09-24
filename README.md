@@ -66,7 +66,7 @@ localhost:3000
 ```
 git clone https://github.com/planetlabs/viewpoints.git
 cd viewpoints
-docker build . -t viewpoints
+docker build -t viewpoints .
 docker run -it [--env='NODE_ENV=production'] [--volume "$PWD":/usr/src/app] viewpoints
 ```
 In the output will be section of "Access URLs" and the main interface is labelled "External"
