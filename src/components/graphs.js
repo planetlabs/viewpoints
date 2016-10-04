@@ -19,14 +19,18 @@
 
 var React = require('react');
 var Graph = require('./graph');
+var difference = require('lodash/difference');
+var intersection = require('lodash/intersection');
 var maxPerArray = 65530;
+var numBrushes = 4;
 
-function unselectAll(columnLength) {
+function unselectAll(columnLength, numBrushes) {
+  var newBrushes = [];
+  for (let i = 0; i < numBrushes; i++) {
+    newBrushes.push([]);
+  }
+
   var normalIndices = [];
-  var highlightedIndices = [];
-  var normalIndicesArrays = [];
-  var highlightedIndicesArrays = [];
-
   var i = 0;
 
   while (i < columnLength) {
@@ -35,38 +39,41 @@ function unselectAll(columnLength) {
     i++;
 
     if (i % maxPerArray === 0 || i === columnLength) {
-      normalIndicesArrays.push(new Uint16Array(normalIndices));
+      newBrushes[0].push(new Uint16Array(normalIndices));
       normalIndices = [];
 
-      highlightedIndicesArrays.push(new Uint16Array(highlightedIndices));
-      highlightedIndices = [];
+      for (let j = 1; j < numBrushes; j++) {
+        let highlightedIndices = [];
+        newBrushes[j].push(new Uint16Array(highlightedIndices));
+      }
     }
   }
-  return [normalIndicesArrays, highlightedIndicesArrays];
+  return newBrushes;
 }
 
 var Graphs = React.createClass({
 
   propTypes: {
+    activeHighlight: React.PropTypes.number,
     axesClassName: React.PropTypes.string,
     className: React.PropTypes.string,
     columns: React.PropTypes.array,
     count: React.PropTypes.number,
     enums: React.PropTypes.array,
     graphClassName: React.PropTypes.string,
-    highlightFunction: React.PropTypes.func,
+    greenBrushOverIndex: React.PropTypes.number,
     onColumnsChanged: React.PropTypes.func,
     options: React.PropTypes.arrayOf(React.PropTypes.string),
     overpaintFactor: React.PropTypes.number,
     pointSize: React.PropTypes.number,
     rowClassName: React.PropTypes.string,
-    viewportClassName: React.PropTypes.string
+    viewportClassName: React.PropTypes.string,
+    yellowBrushOverIndex: React.PropTypes.number
   },
 
   getInitialState() {
     return {
-      highlightedIndicesArrays: [],
-      normalIndicesArrays: []
+      brushes: []
     };
   },
 
@@ -76,36 +83,52 @@ var Graphs = React.createClass({
   },
 
   componentDidUpdate(prevProps, prevState) {
-    if (this.state.normalIndicesArrays.length === 0) {
-      if (this.props.columns.length > 0) {
-        var indicesArrays = unselectAll(this.props.columns[0].length);
-        this.setState({
-          normalIndicesArrays: indicesArrays[0],
-          highlightedIndicesArrays: indicesArrays[1]
-        });
+    if (this.state.brushes.length === 0) {
+      if (this.props.columns.length === 0) {
+        return;
       }
+
+      var newBrushes = unselectAll(this.props.columns[0].length, numBrushes);
+      this.setState({
+        brushes: newBrushes
+      });
+
     }
+  },
+
+  _invertSelection: function() {
+    if (this.props.activeHighlight == 0) {
+      return;
+    }
+    let brush = this.state.brushes[this.props.activeHighlight];
+    let normal = this.state.brushes[0];
+
+    let newBrushedPts = [];
+    for (let i = 0; i < normal.length; i++) {
+      let brushedPts = brush[i];
+      let normalPts = normal[i];
+
+      let unbrushedPts = difference(normalPts, brushedPts);
+      newBrushedPts.push(new Uint16Array(unbrushedPts));
+    }
+
+    let newBrushes = [...this.state.brushes];
+
+    newBrushes[this.props.activeHighlight] = newBrushedPts;
+
+    this.setState({
+      brushes: newBrushes
+    });
   },
 
   _keydown: function(event) {
     switch (event.which) {
       case 73: // 'i' key: invert
-        this.setState({
-          highlightedIndicesArrays: this.state.normalIndicesArrays,
-          normalIndicesArrays: this.state.highlightedIndicesArrays
-        });
+        this._invertSelection();
         break;
       case 88: // 'x' key: delete
-        this._deleteHighlighted();
+        // this._deleteHighlighted();
         break;
-
-      default:
-        break;
-    }
-  },
-
-  _keyup: function(event) {
-    switch (event.which) {
 
       default:
         break;
@@ -143,25 +166,27 @@ var Graphs = React.createClass({
   },
 
   _findSelectedIndices: function(ptArrays, xDown, xUp, yDown, yUp) {
-    // console.log('finding highlighted');
+    if (this.props.activeHighlight == 0) {
+      return;
+    }
+
     var xMin = Math.min(xDown, xUp);
     var xMax = Math.max(xDown, xUp);
 
     var yMin = Math.min(yDown, yUp);
     var yMax = Math.max(yDown, yUp);
 
-    var normalIndicesArrays = [];
     var highlightedIndicesArrays = [];
 
     var nCounts = 0;
     var hCounts = 0;
 
-    for (var i = 0; i < ptArrays.length; i++) {
+    for (let i = 0; i < ptArrays.length; i++) {
       var pts = ptArrays[i];
       var normalIndices = [];
       var highlightedIndices = [];
 
-      for (var j = 0; j < pts.length; j += 2) {
+      for (let j = 0; j < pts.length; j += 2) {
         var x = pts[j];
         var y = pts[j + 1];
 
@@ -174,15 +199,41 @@ var Graphs = React.createClass({
           nCounts++;
         }
       }
-
-      normalIndicesArrays.push(new Uint16Array(normalIndices));
-      highlightedIndicesArrays.push(new Uint16Array(highlightedIndices));
-
+      highlightedIndicesArrays.push(highlightedIndices);
     }
 
+    let andBucket = [];
+    if (this.props.activeHighlight == 3) {
+      andBucket = this.state.brushes[this.props.yellowBrushOverIndex];
+    }
+
+    if (this.props.activeHighlight == 2) {
+      andBucket = this.state.brushes[this.props.greenBrushOverIndex];
+    }
+
+    if (this.props.activeHighlight >= 2) {
+      for (let i = 0; i < andBucket.length; i++) {
+        let subAndBucket = andBucket[i];
+        let subHighlighted = highlightedIndicesArrays[i];
+
+        let intersect = intersection(subAndBucket, subHighlighted);
+
+        highlightedIndicesArrays[i] = intersect;
+      }
+    }
+
+    for (let i = 0; i < highlightedIndicesArrays.length; i++) {
+      highlightedIndicesArrays[i] = new Uint16Array(highlightedIndicesArrays[i]);
+    }
+
+    let newBrushes = [];
+    for (let b = 0; b < this.state.brushes.length; b++) {
+      newBrushes.push(this.state.brushes[b]);
+    }
+    newBrushes[this.props.activeHighlight] = highlightedIndicesArrays;
+
     this.setState({
-      normalIndicesArrays: normalIndicesArrays,
-      highlightedIndicesArrays: highlightedIndicesArrays
+      brushes: newBrushes
     });
   },
 
@@ -201,14 +252,13 @@ var Graphs = React.createClass({
       }
       rows[rowIndex].push(
         <Graph
+            brushes={this.state.brushes}
             axesClassName={this.props.axesClassName}
             className={this.props.graphClassName}
             columns={this.props.columns}
             enums={this.props.enums}
             highlightFunction={this._findSelectedIndices}
-            highlightedIndicesArrays={this.state.highlightedIndicesArrays}
             key={i}
-            normalIndicesArrays={this.state.normalIndicesArrays}
             options={this.props.options}
             overpaintFactor={this.props.overpaintFactor}
             pointSize={this.props.pointSize}

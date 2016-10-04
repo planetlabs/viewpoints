@@ -18,6 +18,12 @@
 // limitations under the License.
 
 var React = require('react');
+var bootstrap = require('react-bootstrap');
+var Tabs = bootstrap.Tabs;
+var Tab = bootstrap.Tab;
+var Button = bootstrap.Button;
+var ButtonGroup = bootstrap.ButtonGroup;
+var Glyphicon = bootstrap.Glyphicon;
 
 var Sidebar = React.createClass({
 
@@ -26,6 +32,12 @@ var Sidebar = React.createClass({
     overpaintFactor: React.PropTypes.number,
     onOverpaintFactorChange: React.PropTypes.func,
     pointSize: React.PropTypes.number,
+    activeHighlight: React.PropTypes.number,
+    onHighlightChanged: React.PropTypes.func,
+    yellowBrushOverIndex: React.PropTypes.number,
+    greenBrushOverIndex: React.PropTypes.number,
+    setYellowBrushOver: React.PropTypes.func,
+    setGreenBrushOver: React.PropTypes.func
   },
 
   _onPointSizeChange: function(event) {
@@ -34,6 +46,10 @@ var Sidebar = React.createClass({
 
   _onOverpaintFactorChange: function(event) {
     this.props.onOverpaintFactorChange(parseFloat(event.target.value));
+  },
+
+  _setYellowBrushOverIndex: function(index) {
+    this.props.setYellowBrushOver(index);
   },
 
   render: function() {
@@ -65,6 +81,59 @@ var Sidebar = React.createClass({
       }
     ];
 
+    var redGlyph = (<Glyphicon glyph="tint" className='red' value='0'/>);
+    var blueGlyph = (<Glyphicon glyph="tint" className='blue' value='1'/>);
+    var greenGlyph = (<Glyphicon glyph="tint" className='green' value='2'/>);
+    var yellowGlyph = (<Glyphicon glyph="tint" className='yellow' value='3'/>);
+
+    var redInside = (
+      <div>
+        <div className="vp-sidebar-item-label">Select From</div>
+        <ButtonGroup>
+          <Button disabled>{redGlyph}</Button>
+          <Button disabled>{blueGlyph}</Button>
+          <Button disabled>{greenGlyph}</Button>
+          <Button disabled>{yellowGlyph}</Button>
+        </ButtonGroup>
+      </div>
+    )
+
+    var blueInside = (
+      <div>
+        <div className="vp-sidebar-item-label">Select From</div>
+        <ButtonGroup>
+          <Button disabled>{redGlyph}</Button>
+          <Button disabled>{blueGlyph}</Button>
+          <Button disabled>{greenGlyph}</Button>
+          <Button disabled>{yellowGlyph}</Button>
+        </ButtonGroup>
+      </div>
+    )
+
+    var greenInside = (
+      <div>
+        <div className="vp-sidebar-item-label">Select From</div>
+        <ButtonGroup>
+          <Button value='0' onClick={() => this.props.setGreenBrushOver('0')}>{redGlyph}</Button>
+          <Button value='1' onClick={() => this.props.setGreenBrushOver('1')}>{blueGlyph}</Button>
+          <Button disabled>{greenGlyph}</Button>
+          <Button disabled>{yellowGlyph}</Button>
+        </ButtonGroup>
+      </div>
+    )
+
+    var yellowInside = (
+      <div>
+        <div className="vp-sidebar-item-label">Select From</div>
+        <ButtonGroup>
+          <Button value='0' onClick={() => this.props.setYellowBrushOver('0')}>{redGlyph}</Button>
+          <Button value='1' onClick={() => this.props.setYellowBrushOver('1')}>{blueGlyph}</Button>
+          <Button value='2' onClick={() => this.props.setYellowBrushOver('2')}>{greenGlyph}</Button>
+          <Button disabled>{yellowGlyph}</Button>
+        </ButtonGroup>
+      </div>
+    )
+
     return (
       <div className="vp-sidebar">
         {items.map(function(item, index) {
@@ -76,6 +145,14 @@ var Sidebar = React.createClass({
             </div>
           )
         })}
+        <div>
+          <Tabs activeKey={this.props.activeHighlight+1} onSelect={this.props.onHighlightChanged} id="controlled-tab">
+            <Tab eventKey={1} title={redGlyph}>{redInside}</Tab>
+            <Tab eventKey={2} title={blueGlyph}>{greenInside}</Tab>
+            <Tab eventKey={3} title={greenGlyph}>{greenInside}</Tab>
+            <Tab eventKey={4} title={yellowGlyph}>{yellowInside}</Tab>
+          </Tabs>
+        </div>
       </div>
     );
   }

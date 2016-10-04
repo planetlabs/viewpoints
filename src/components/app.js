@@ -42,7 +42,10 @@ var App = React.createClass({
       loadPercent: 0,
       graphCount: 0,
       pointSize: 2,
-      overpaintFactor: 3
+      overpaintFactor: 3,
+      activeHighlight: 1,
+      yellowBrushOverIndex: 0,
+      greenBrushOverIndex: 0
     };
   },
 
@@ -169,13 +172,29 @@ var App = React.createClass({
   },
 
   _onPointSizeChange: function(pointSize) {
-    // console.log("on point size change");
     this.setState({pointSize: pointSize});
   },
 
   _onOverpaintFactorChange: function(factor) {
-    // console.log("on overpaint change");
     this.setState({overpaintFactor: factor});
+  },
+
+  _onHighlightChanged: function(newHighlightKey) {
+    newHighlightKey -= 1; // correct for stupid off by 1 behavior
+    // that comes with react-bootstrap's implementation of tabs
+    this.setState({activeHighlight: newHighlightKey});
+  },
+
+  _setYellowBrushOver: function(index) {
+    this.setState({
+      yellowBrushOverIndex: parseFloat(index)
+    });
+  },
+
+  _setGreenBrushOver: function(index) {
+    this.setState({
+      greenBrushOverIndex: parseFloat(index)
+    });
   },
 
   render: function() {
@@ -193,16 +212,26 @@ var App = React.createClass({
           </div>}
         </div>
         <div className="vp-content">
-          <Graphs columns={this.state.columns}
+          <Graphs
+              activeHighlight={this.state.activeHighlight}
+              columns={this.state.columns}
               count={this.state.graphCount}
               enums={this.state.enums}
               onColumnsChanged={this._onColumnsChanged}
               options={this.state.options}
               overpaintFactor={this.state.overpaintFactor}
+              yellowBrushOverIndex={this.state.yellowBrushOverIndex}
+              greenBrushOverIndex={this.state.greenBrushOverIndex}
               pointSize={this.state.pointSize}/>
           <Sidebar onPointSizeChange={this._onPointSizeChange}
-              pointSize={this.state.pointSize}
+              activeHighlight={this.state.activeHighlight}
+              onHighlightChanged={this._onHighlightChanged}
               overpaintFactor={this.state.overpaintFactor}
+              pointSize={this.state.pointSize}
+              yellowBrushOverIndex={this.state.yellowBrushOverIndex}
+              setYellowBrushOver={this._setYellowBrushOver}
+              setGreenBrushOver={this._setGreenBrushOver}
+              greenBrushOverIndex={this.state.greenBrushOverIndex}
               onOverpaintFactorChange={this._onOverpaintFactorChange}/>
         </div>
       </div>);
