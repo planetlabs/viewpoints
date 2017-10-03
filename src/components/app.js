@@ -45,7 +45,9 @@ var App = React.createClass({
       overpaintFactor: 3,
       activeHighlight: 1,
       yellowBrushOverIndex: 0,
-      greenBrushOverIndex: 0
+      greenBrushOverIndex: 0,
+      tealBrushOverIndex: 0,
+      purpleBrushOverIndex: 0
     };
   },
 
@@ -191,6 +193,18 @@ var App = React.createClass({
     });
   },
 
+  _setTealBrushOver: function(index) {
+    this.setState({
+      tealBrushOverIndex: parseFloat(index)
+    });
+  },
+
+  _setPurpleBrushOver: function(index) {
+    this.setState({
+      purpleBrushOverIndex: parseFloat(index)
+    });
+  },
+
   _setGreenBrushOver: function(index) {
     this.setState({
       greenBrushOverIndex: parseFloat(index)
@@ -222,6 +236,8 @@ var App = React.createClass({
               overpaintFactor={this.state.overpaintFactor}
               yellowBrushOverIndex={this.state.yellowBrushOverIndex}
               greenBrushOverIndex={this.state.greenBrushOverIndex}
+              tealBrushOverIndex={this.state.tealBrushOverIndex}
+              purpleBrushOverIndex={this.state.purpleBrushOverIndex}
               pointSize={this.state.pointSize}/>
           <Sidebar onPointSizeChange={this._onPointSizeChange}
               activeHighlight={this.state.activeHighlight}
@@ -229,9 +245,13 @@ var App = React.createClass({
               overpaintFactor={this.state.overpaintFactor}
               pointSize={this.state.pointSize}
               yellowBrushOverIndex={this.state.yellowBrushOverIndex}
+              greenBrushOverIndex={this.state.greenBrushOverIndex}
+              tealBrushOverIndex={this.state.tealBrushOverIndex}
+              purpleBrushOverIndex={this.state.purpleBrushOverIndex}
               setYellowBrushOver={this._setYellowBrushOver}
               setGreenBrushOver={this._setGreenBrushOver}
-              greenBrushOverIndex={this.state.greenBrushOverIndex}
+              setTealBrushOver={this._setTealBrushOver}
+              setPurpleBrushOver={this._setPurpleBrushOver}
               onOverpaintFactorChange={this._onOverpaintFactorChange}/>
         </div>
       </div>);

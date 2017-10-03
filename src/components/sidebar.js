@@ -36,8 +36,12 @@ var Sidebar = React.createClass({
     onHighlightChanged: React.PropTypes.func,
     yellowBrushOverIndex: React.PropTypes.number,
     greenBrushOverIndex: React.PropTypes.number,
+    tealBrushOverIndex: React.PropTypes.number,
+    PurpleBrushOverIndex: React.PropTypes.number,
     setYellowBrushOver: React.PropTypes.func,
-    setGreenBrushOver: React.PropTypes.func
+    setGreenBrushOver: React.PropTypes.func,
+    setTealBrushOver: React.PropTypes.func,
+    setPurpleBrushOver: React.PropTypes.func
   },
 
   _onPointSizeChange: function(event) {
@@ -85,6 +89,8 @@ var Sidebar = React.createClass({
     var blueGlyph = (<Glyphicon glyph="tint" className='blue' value='1'/>);
     var greenGlyph = (<Glyphicon glyph="tint" className='green' value='2'/>);
     var yellowGlyph = (<Glyphicon glyph="tint" className='yellow' value='3'/>);
+    var tealGlyph = (<Glyphicon glyph="tint" className='teal' value='4'/>);
+    var purpleGlyph = (<Glyphicon glyph="tint" className='purple' value='5'/>);
 
     var redInside = (
       <div>
@@ -94,6 +100,8 @@ var Sidebar = React.createClass({
           <Button disabled>{blueGlyph}</Button>
           <Button disabled>{greenGlyph}</Button>
           <Button disabled>{yellowGlyph}</Button>
+          <Button disabled>{tealGlyph}</Button>
+          <Button disabled>{purpleGlyph}</Button>
         </ButtonGroup>
       </div>
     )
@@ -106,6 +114,8 @@ var Sidebar = React.createClass({
           <Button disabled>{blueGlyph}</Button>
           <Button disabled>{greenGlyph}</Button>
           <Button disabled>{yellowGlyph}</Button>
+          <Button disabled>{tealGlyph}</Button>
+          <Button disabled>{purpleGlyph}</Button>
         </ButtonGroup>
       </div>
     )
@@ -118,6 +128,8 @@ var Sidebar = React.createClass({
           <Button value='1' onClick={() => this.props.setGreenBrushOver('1')}>{blueGlyph}</Button>
           <Button disabled>{greenGlyph}</Button>
           <Button disabled>{yellowGlyph}</Button>
+          <Button disabled>{tealGlyph}</Button>
+          <Button disabled>{purpleGlyph}</Button>
         </ButtonGroup>
       </div>
     )
@@ -130,9 +142,40 @@ var Sidebar = React.createClass({
           <Button value='1' onClick={() => this.props.setYellowBrushOver('1')}>{blueGlyph}</Button>
           <Button value='2' onClick={() => this.props.setYellowBrushOver('2')}>{greenGlyph}</Button>
           <Button disabled>{yellowGlyph}</Button>
+          <Button disabled>{tealGlyph}</Button>
+          <Button disabled>{purpleGlyph}</Button>
         </ButtonGroup>
       </div>
     )
+
+    var tealInside = (
+      <div>
+        <div className="vp-sidebar-item-label">Select From</div>
+        <ButtonGroup>
+          <Button value='0' onClick={() => this.props.setTealBrushOver('0')}>{redGlyph}</Button>
+          <Button value='1' onClick={() => this.props.setTealBrushOver('1')}>{blueGlyph}</Button>
+          <Button value='2' onClick={() => this.props.setTealBrushOver('2')}>{greenGlyph}</Button>
+          <Button value='3' onClick={() => this.props.setTealBrushOver('3')}>{yellowGlyph}</Button>
+          <Button disabled>{tealGlyph}</Button>
+          <Button disabled>{purpleGlyph}</Button>
+        </ButtonGroup>
+      </div>
+    )
+
+    var purpleInside = (
+      <div>
+        <div className="vp-sidebar-item-label">Select From</div>
+        <ButtonGroup>
+          <Button value='0' onClick={() => this.props.setPurpleBrushOver('0')}>{redGlyph}</Button>
+          <Button value='1' onClick={() => this.props.setPurpleBrushOver('1')}>{blueGlyph}</Button>
+          <Button value='2' onClick={() => this.props.setPurpleBrushOver('2')}>{greenGlyph}</Button>
+          <Button value='3' onClick={() => this.props.setPurpleBrushOver('3')}>{yellowGlyph}</Button>
+          <Button value='4' onClick={() => this.props.setPurpleBrushOver('4')}>{tealGlyph}</Button>
+          <Button disabled>{purpleGlyph}</Button>
+         </ButtonGroup>
+      </div>
+    )
+
 
     return (
       <div className="vp-sidebar">
@@ -151,6 +194,8 @@ var Sidebar = React.createClass({
             <Tab eventKey={2} title={blueGlyph}>{greenInside}</Tab>
             <Tab eventKey={3} title={greenGlyph}>{greenInside}</Tab>
             <Tab eventKey={4} title={yellowGlyph}>{yellowInside}</Tab>
+            <Tab eventKey={5} title={tealGlyph}>{tealInside}</Tab>
+            <Tab eventKey={6} title={purpleGlyph}>{purpleInside}</Tab>
           </Tabs>
         </div>
       </div>

@@ -248,7 +248,9 @@ var Viewport = React.createClass({
       [255, this.props.overpaintFactor, this.props.overpaintFactor, 0.9],
       [this.props.overpaintFactor, this.props.overpaintFactor, 255, 0.9],
       [this.props.overpaintFactor, 255, this.props.overpaintFactor, 0.9],
-      [255, 255, this.props.overpaintFactor, 0.9]
+      [255, 255, this.props.overpaintFactor, 0.9],
+      [this.props.overpaintFactor, 255, 255, 0.9],
+      [255, this.props.overpaintFactor, 255, 0.9]
     ];
 
     for (let b = this.props.brushes.length - 1; b >= 0; b--) {

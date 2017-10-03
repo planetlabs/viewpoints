@@ -22,7 +22,7 @@ var Graph = require('./graph');
 var difference = require('lodash/difference');
 var intersection = require('lodash/intersection');
 var maxPerArray = 65530;
-var numBrushes = 4;
+var numBrushes = 6;
 
 function unselectAll(columnLength, numBrushes) {
   var newBrushes = [];
@@ -68,7 +68,9 @@ var Graphs = React.createClass({
     pointSize: React.PropTypes.number,
     rowClassName: React.PropTypes.string,
     viewportClassName: React.PropTypes.string,
-    yellowBrushOverIndex: React.PropTypes.number
+    yellowBrushOverIndex: React.PropTypes.number,
+    tealBrushOverIndex: React.PropTypes.number,
+    purpleBrushOverIndex: React.PropTypes.number
   },
 
   getInitialState() {
@@ -203,6 +205,15 @@ var Graphs = React.createClass({
     }
 
     let andBucket = [];
+
+    if (this.props.activeHighlight == 5) {
+      andBucket = this.state.brushes[this.props.purpleBrushOverIndex];
+    }
+
+    if (this.props.activeHighlight == 4) {
+      andBucket = this.state.brushes[this.props.tealBrushOverIndex];
+    }
+
     if (this.props.activeHighlight == 3) {
       andBucket = this.state.brushes[this.props.yellowBrushOverIndex];
     }
