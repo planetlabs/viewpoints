@@ -20,41 +20,9 @@
 var React = require('react');
 var Webgl = require('../util/webgl');
 var platform = require('platform');
+var PropTypes = require('prop-types');
 
-var Viewport = React.createClass({
-
-  propTypes: {
-    brushes: React.PropTypes.array,
-    columns: React.PropTypes.array,
-    enums: React.PropTypes.array,
-    height: React.PropTypes.number,
-    highlightFunction: React.PropTypes.func,
-    options: React.PropTypes.arrayOf(React.PropTypes.string),
-    overpaintFactor: React.PropTypes.number,
-    pointSize: React.PropTypes.number,
-    uid: React.PropTypes.number,
-    width: React.PropTypes.number,
-    xAxisSelectedIndex: React.PropTypes.number,
-    yAxisSelectedIndex: React.PropTypes.number
-  },
-
-  getInitialState() {
-    return {
-      mouseIsDown: false,
-      mouseDownX: 0,
-      mouseDownY: 0,
-      mouseDownRawX: 0,
-      mouseDownRawY: 0,
-      mouseUpX: 0,
-      mouseUpY: 0,
-      translationX: 0,
-      translationY: 0,
-      zoomX: 0.8,
-      zoomY: 0.8
-    };
-  },
-
-  vertexShader: `
+const vertexShader = `
     attribute vec2 a_position;
     uniform vec2 u_translation;
     uniform vec2 u_zoom;
@@ -65,9 +33,10 @@ var Viewport = React.createClass({
        gl_Position = vec4(offset_position, 0, 1);
        gl_PointSize = u_point_size;
     }
-  `,
+`;
 
-  fragmentShader: `
+
+const fragmentShader = `
     precision mediump float;
 
     uniform vec4 u_color;
@@ -75,9 +44,25 @@ var Viewport = React.createClass({
     void main() {
        gl_FragColor = u_color;
     }
-  `,
+  `;
 
-  componentDidMount: function() {
+
+class Viewport extends React.Component {
+  state = {
+    mouseIsDown: false,
+    mouseDownX: 0,
+    mouseDownY: 0,
+    mouseDownRawX: 0,
+    mouseDownRawY: 0,
+    mouseUpX: 0,
+    mouseUpY: 0,
+    translationX: 0,
+    translationY: 0,
+    zoomX: 0.8,
+    zoomY: 0.8
+  };
+
+  componentDidMount() {
     var canvas = this.refs.webglCanvas;
     this._prepareWebgl(canvas);
     this._setAxes(canvas);
@@ -89,9 +74,9 @@ var Viewport = React.createClass({
 
     var hudCanvas = this.refs.hudCanvas;
     this._paintHud(hudCanvas);
-  },
+  };
 
-  componentDidUpdate: function(prevProps, prevState) {
+  componentDidUpdate(prevProps, prevState) {
     var canvas = this.refs.webglCanvas;
     this.gl.viewport(0, 0, this.props.width, this.props.height);
     if (this.props.columns !== prevProps.columns) {
@@ -103,7 +88,8 @@ var Viewport = React.createClass({
 
     var hudCanvas = this.refs.hudCanvas;
     this._paintHud(hudCanvas);
-  },
+  };
+
   componentWillReceiveProps(nextProps) {
     var canvas = this.refs.webglCanvas;
     if (this.props.xAxisSelectedIndex != nextProps.xAxisSelectedIndex ||
@@ -117,7 +103,7 @@ var Viewport = React.createClass({
         translationY: 0
       });
     }
-  },
+  };
 
   _paintHud(canvas) {
     var ctx = canvas.getContext('2d');
@@ -170,13 +156,11 @@ var Viewport = React.createClass({
     ctx.fillText(yAxisTitle, 0, -offset / 2);
     ctx.rotate(90 * Math.PI / 180);
     ctx.translate(-offset, -canvas.height / 2);
+  };
 
-
-  },
-
-  _prepareWebgl: function(canvas) {
+  _prepareWebgl(canvas) {
     var gl = Webgl.initWebGL(canvas);
-    var program = Webgl.createProgramFromScripts(gl, this.vertexShader, this.fragmentShader);
+    var program = Webgl.createProgramFromScripts(gl, vertexShader, fragmentShader);
 
     gl.useProgram(program);
 
@@ -210,9 +194,9 @@ var Viewport = React.createClass({
     this.pointSizeLocation = gl.getUniformLocation(program, 'u_point_size');
 
     this.gl = gl;
-  },
+  };
 
-  _paint: function(canvas) {
+  _paint(canvas) {
     this.gl.uniform2f(this.translationLocation, this.state.translationX, this.state.translationY);
     this.gl.uniform2f(this.zoomLocation, this.state.zoomX, this.state.zoomY);
     this.gl.uniform1f(this.pointSizeLocation, this.props.pointSize);
@@ -314,9 +298,9 @@ var Viewport = React.createClass({
     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array([
       0, 1,
       1, 2]), gl.STATIC_DRAW);
-  },
+  };
 
-  _setAxes: function(canvas, indexX = this.props.xAxisSelectedIndex, indexY = this.props.yAxisSelectedIndex) {
+  _setAxes(canvas, indexX = this.props.xAxisSelectedIndex, indexY = this.props.yAxisSelectedIndex) {
 
     var xAxis = this.props.columns[indexX];
     var yAxis = this.props.columns[indexY];
@@ -377,25 +361,25 @@ var Viewport = React.createClass({
     this.yMax = yMax;
 
     this.ptArrays = ptArrays;
-  },
+  };
 
-  _rawToNormalizedX: function(event) {
+  _rawToNormalizedX(event) {
     return ((event.offsetX / this.props.width) * 2 - 1) / this.state.zoomX - this.state.translationX;
-  },
+  };
 
-  _rawToNormalizedY: function(event) {
+  _rawToNormalizedY(event) {
     return (((event.target.height - event.offsetY) / this.props.height) * 2 - 1) / this.state.zoomY - this.state.translationY;
-  },
+  };
 
-  _normalizedToRawX: function(x) {
+  _normalizedToRawX(x) {
     return (((x + this.state.translationX) * this.state.zoomX) + 1) / 2 * this.props.width;
-  },
+  };
 
-  _normalizedToRawY: function(y) {
+  _normalizedToRawY(y) {
     return (((y + this.state.translationY) * this.state.zoomY) + 1) / 2 * this.props.height;
-  },
+  };
 
-  mousedown: function(event) {
+  mousedown(event) {
     var x = this._rawToNormalizedX(event);
     var y = this._rawToNormalizedY(event);
     this.setState({
@@ -407,9 +391,9 @@ var Viewport = React.createClass({
       mouseDownRawY: event.target.height - event.offsetY,
       mouseUpY: y
     });
-  },
+  };
 
-  mousemove: function(event) {
+  mousemove(event) {
     var x = this._rawToNormalizedX(event);
     var y = this._rawToNormalizedY(event);
 
@@ -472,9 +456,9 @@ var Viewport = React.createClass({
 
       }
     }
-  },
+  };
 
-  mouseup: function(event) {
+  mouseup(event) {
     var x = this._rawToNormalizedX(event);
     var y = this._rawToNormalizedY(event);
     this.setState({
@@ -482,9 +466,9 @@ var Viewport = React.createClass({
       mouseUpX: x,
       mouseUpY: y
     });
-  },
+  };
 
-  render: function() {
+  render() {
     var hudStyle = {
       "pointer-events": "none"
     };
@@ -502,7 +486,23 @@ var Viewport = React.createClass({
 
       </div>
     );
-  }
-});
+  };
+};
 
-module.exports = Viewport;
+// module.exports = Viewport;
+Viewport.propTypes = {
+  brushes: PropTypes.array,
+  columns: PropTypes.array,
+  enums: PropTypes.array,
+  height: PropTypes.number,
+  highlightFunction: PropTypes.func,
+  options: PropTypes.arrayOf(PropTypes.string),
+  overpaintFactor: PropTypes.number,
+  pointSize: PropTypes.number,
+  uid: PropTypes.number,
+  width: PropTypes.number,
+  xAxisSelectedIndex: PropTypes.number,
+  yAxisSelectedIndex: PropTypes.number
+};
+
+export default Viewport;

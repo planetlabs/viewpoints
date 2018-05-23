@@ -21,6 +21,7 @@ var React = require('react');
 var Graph = require('./graph');
 var difference = require('lodash/difference');
 var intersection = require('lodash/intersection');
+var PropTypes = require('prop-types');
 var maxPerArray = 65530;
 var numBrushes = 6;
 
@@ -51,38 +52,15 @@ function unselectAll(columnLength, numBrushes) {
   return newBrushes;
 }
 
-var Graphs = React.createClass({
-
-  propTypes: {
-    activeHighlight: React.PropTypes.number,
-    axesClassName: React.PropTypes.string,
-    className: React.PropTypes.string,
-    columns: React.PropTypes.array,
-    count: React.PropTypes.number,
-    enums: React.PropTypes.array,
-    graphClassName: React.PropTypes.string,
-    greenBrushOverIndex: React.PropTypes.number,
-    onColumnsChanged: React.PropTypes.func,
-    options: React.PropTypes.arrayOf(React.PropTypes.string),
-    overpaintFactor: React.PropTypes.number,
-    pointSize: React.PropTypes.number,
-    rowClassName: React.PropTypes.string,
-    viewportClassName: React.PropTypes.string,
-    yellowBrushOverIndex: React.PropTypes.number,
-    tealBrushOverIndex: React.PropTypes.number,
-    purpleBrushOverIndex: React.PropTypes.number
-  },
-
-  getInitialState() {
-    return {
-      brushes: []
-    };
-  },
+class Graphs extends React.Component {
+  state = {
+    brushes: []
+  };
 
   componentDidMount() {
     window.addEventListener('keydown', this._keydown);
     window.addEventListener('keyup', this._keyup);
-  },
+  };
 
   componentDidUpdate(prevProps, prevState) {
     if (this.state.brushes.length === 0) {
@@ -96,9 +74,9 @@ var Graphs = React.createClass({
       });
 
     }
-  },
+  };
 
-  _invertSelection: function() {
+  _invertSelection() {
     if (this.props.activeHighlight == 0) {
       return;
     }
@@ -121,9 +99,9 @@ var Graphs = React.createClass({
     this.setState({
       brushes: newBrushes
     });
-  },
+  };
 
-  _keydown: function(event) {
+  _keydown(event) {
     switch (event.which) {
       case 73: // 'i' key: invert
         this._invertSelection();
@@ -135,9 +113,9 @@ var Graphs = React.createClass({
       default:
         break;
     }
-  },
+  };
 
-  _deleteHighlighted: function() {
+  _deleteHighlighted() {
     var totalHighlighted = 0;
     for (var a = 0; a < this.state.highlightedIndicesArrays.length; a++) {
       var highlightedIndices = this.state.highlightedIndicesArrays[a];
@@ -165,9 +143,9 @@ var Graphs = React.createClass({
       normalIndicesArrays: newIndices[0],
       highlightedIndicesArrays: newIndices[1]
     })
-  },
+  };
 
-  _findSelectedIndices: function(ptArrays, xDown, xUp, yDown, yUp) {
+  _findSelectedIndices(ptArrays, xDown, xUp, yDown, yUp) {
     if (this.props.activeHighlight == 0) {
       return;
     }
@@ -246,9 +224,9 @@ var Graphs = React.createClass({
     this.setState({
       brushes: newBrushes
     });
-  },
+  };
 
-  render: function() {
+  render() {
 
     if (!this.props.columns || !this.props.options) {
       return null;
@@ -289,7 +267,30 @@ var Graphs = React.createClass({
         })}
       </div>
     );
-  }
-});
+  };
+};
 
-module.exports = Graphs;
+// module.exports = Graphs;
+
+
+Graphs.propTypes = {
+  activeHighlight: PropTypes.number,
+  axesClassName: PropTypes.string,
+  className: PropTypes.string,
+  columns: PropTypes.array,
+  count: PropTypes.number,
+  enums: PropTypes.array,
+  graphClassName: PropTypes.string,
+  greenBrushOverIndex: PropTypes.number,
+  onColumnsChanged: PropTypes.func,
+  options: PropTypes.arrayOf(PropTypes.string),
+  overpaintFactor: PropTypes.number,
+  pointSize: PropTypes.number,
+  rowClassName: PropTypes.string,
+  viewportClassName: PropTypes.string,
+  yellowBrushOverIndex: PropTypes.number,
+  tealBrushOverIndex: PropTypes.number,
+  purpleBrushOverIndex: PropTypes.number
+};
+
+export default Graphs;

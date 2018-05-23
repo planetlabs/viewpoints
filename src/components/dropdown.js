@@ -17,26 +17,21 @@
 // limitations under the License.
 
 var React = require('react');
+var PropTypes = require('prop-types');
 var bootstrap = require('react-bootstrap');
 var DropdownButton = bootstrap.DropdownButton;
 var MenuItem = bootstrap.MenuItem;
 import Typeahead from 'react-bootstrap-typeahead';
 
-var Dropdown = React.createClass({
-  propTypes: {
-    onSelect: React.PropTypes.func,
-    options: React.PropTypes.array,
-    selectedIndex: React.PropTypes.number
-  },
-
-  _handleChange: function(elements) {
+class Dropdown extends React.Component {
+  _handleChange(elements) {
     if (elements.length > 0) {
       let element = elements[0];
       this.props.onSelect(element.id);
     }
-  },
+  }
 
-  render: function() {
+  render() {
     let taOptions = this.props.options.map((option, index) => {
       return {id: index, label: option + ""};
     });
@@ -52,6 +47,13 @@ var Dropdown = React.createClass({
       </div>
     );
   }
-});
 
-module.exports = Dropdown;
+}
+
+Dropdown.propTypes = {
+  onSelect: PropTypes.func,
+  options: PropTypes.array,
+  selectedIndex: PropTypes.number
+};
+
+export default Dropdown;

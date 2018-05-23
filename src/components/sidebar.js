@@ -24,39 +24,22 @@ var Tab = bootstrap.Tab;
 var Button = bootstrap.Button;
 var ButtonGroup = bootstrap.ButtonGroup;
 var Glyphicon = bootstrap.Glyphicon;
+var PropTypes = require('prop-types');
 
-var Sidebar = React.createClass({
-
-  propTypes: {
-    onPointSizeChange: React.PropTypes.func,
-    overpaintFactor: React.PropTypes.number,
-    onOverpaintFactorChange: React.PropTypes.func,
-    pointSize: React.PropTypes.number,
-    activeHighlight: React.PropTypes.number,
-    onHighlightChanged: React.PropTypes.func,
-    yellowBrushOverIndex: React.PropTypes.number,
-    greenBrushOverIndex: React.PropTypes.number,
-    tealBrushOverIndex: React.PropTypes.number,
-    PurpleBrushOverIndex: React.PropTypes.number,
-    setYellowBrushOver: React.PropTypes.func,
-    setGreenBrushOver: React.PropTypes.func,
-    setTealBrushOver: React.PropTypes.func,
-    setPurpleBrushOver: React.PropTypes.func
-  },
-
-  _onPointSizeChange: function(event) {
+class Sidebar extends React.Component {
+  _onPointSizeChange(event) {
     this.props.onPointSizeChange(parseFloat(event.target.value));
-  },
+  };
 
-  _onOverpaintFactorChange: function(event) {
+  _onOverpaintFactorChange(event) {
     this.props.onOverpaintFactorChange(parseFloat(event.target.value));
-  },
+  };
 
-  _setYellowBrushOverIndex: function(index) {
+  _setYellowBrushOverIndex(index) {
     this.props.setYellowBrushOver(index);
-  },
+  };
 
-  render: function() {
+  render() {
 
     var items = [
       {
@@ -201,6 +184,25 @@ var Sidebar = React.createClass({
       </div>
     );
   }
-});
+};
 
-module.exports = Sidebar;
+
+Sidebar.propTypes = {
+  onPointSizeChange: PropTypes.func,
+  overpaintFactor: PropTypes.number,
+  onOverpaintFactorChange: PropTypes.func,
+  pointSize: PropTypes.number,
+  activeHighlight: PropTypes.number,
+  onHighlightChanged: PropTypes.func,
+  yellowBrushOverIndex: PropTypes.number,
+  greenBrushOverIndex: PropTypes.number,
+  tealBrushOverIndex: PropTypes.number,
+  PurpleBrushOverIndex: PropTypes.number,
+  setYellowBrushOver: PropTypes.func,
+  setGreenBrushOver: PropTypes.func,
+  setTealBrushOver: PropTypes.func,
+  setPurpleBrushOver: PropTypes.func
+};
+
+export default Sidebar;
+// module.exports = Sidebar;

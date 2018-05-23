@@ -19,34 +19,18 @@ var React = require('react');
 
 var Dropdown = require('./dropdown');
 var Viewport = require('./viewport');
+var PropTypes = require('prop-types');
 
-var Graph = React.createClass({
-
-  propTypes: {
-    axesClassName: React.PropTypes.string,
-    brushes: React.PropTypes.array,
-    className: React.PropTypes.string,
-    columns: React.PropTypes.array,
-    enums: React.PropTypes.array,
-    highlightFunction: React.PropTypes.func,
-    options: React.PropTypes.arrayOf(React.PropTypes.string),
-    overpaintFactor: React.PropTypes.number,
-    pointSize: React.PropTypes.number,
-    uid: React.PropTypes.number,
-    viewportClassName: React.PropTypes.string
-  },
-
-  getInitialState: function() {
-    return {
-      viewportHeight: 600,
-      viewportWidth: 600,
-      xAxisSelectedIndex: 0,
-      yAxisSelectedIndex: 1,
-      xOptions: this.props.options,
-      yOptions: this.props.options,
-      thumbnails: false
-    };
-  },
+class Graph extends React.Component {
+  state =  {
+    viewportHeight: 600,
+    viewportWidth: 600,
+    xAxisSelectedIndex: 0,
+    yAxisSelectedIndex: 1,
+    xOptions: this.props.options,
+    yOptions: this.props.options,
+    thumbnails: false
+  };
 
   componentDidUpdate(prevProps, prevState) {
     if (prevState.viewportWidth !== this.refs.viewport.offsetWidth ||
@@ -57,25 +41,25 @@ var Graph = React.createClass({
         viewportWidth: this.refs.viewport.offsetWidth
       });
     }
-  },
+  };
 
-  componentDidMount: function() {
+  componentDidMount() {
     this._onResize();
     window.addEventListener('resize', this._onResize);
-  },
+  };
 
-  componentWillUnmount: function() {
+  componentWillUnmount() {
     window.removeEventListener('resize', this._onResize);
-  },
+  };
 
-  _onResize: function() {
+  _onResize() {
     this.setState({
       viewportHeight: this.refs.viewport.offsetHeight,
       viewportWidth: this.refs.viewport.offsetWidth
     });
-  },
+  };
 
-  _onXAxisSelect: function(index) {
+  _onXAxisSelect(index) {
     let newEnumsX = this.props.enums[index];
     let thumbnails = false;
     if (newEnumsX.size > 2) {
@@ -108,22 +92,22 @@ var Graph = React.createClass({
       });
     }
 
-  },
+  };
 
-  _onYAxisSelect: function(index) {
+  _onYAxisSelect(index) {
     this.setState({yAxisSelectedIndex: index});
-  },
+  };
 
-  _swapAxes: function() {
+  _swapAxes() {
     let x = this.state.xAxisSelectedIndex;
     let y = this.state.yAxisSelectedIndex;
     this.setState({
       xAxisSelectedIndex: y,
       yAxisSelectedIndex: x
     });
-  },
+  };
 
-  render: function() {
+  render() {
     if (this.state.thumbnails) {
       var maxPerArray = 65530;  // TODO: pull this into a global variable
       // It is replicated in viewport.js
@@ -196,7 +180,22 @@ var Graph = React.createClass({
         { mainDisplay }
       </div>
     );
-  }
-});
+  };
+};
 
-module.exports = Graph;
+Graph.propTypes = {
+  axesClassName: PropTypes.string,
+  brushes: PropTypes.array,
+  className: PropTypes.string,
+  columns: PropTypes.array,
+  enums: PropTypes.array,
+  highlightFunction: PropTypes.func,
+  options: PropTypes.arrayOf(PropTypes.string),
+  overpaintFactor: PropTypes.number,
+  pointSize: PropTypes.number,
+  uid: PropTypes.number,
+  viewportClassName: PropTypes.string
+};
+
+// module.exports = Graph;
+export default Graph;

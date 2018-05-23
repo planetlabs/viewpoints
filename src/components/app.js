@@ -25,44 +25,39 @@ var url = require('url');
 var querystring = require('querystring');
 var ProgressBar = require('react-progress-bar-plus');
 
-var App = React.createClass({
+// let urlArgs = url.parse(window.location.href);
+// let args = querystring.parse(urlArgs.query);
+// if ('csv' in args) {
+//   this._parseCsv(args.csv);
+// }
 
-  getInitialState: function() {
+class App extends React.Component {
+  state = {
+    columns: [],
+    options: [],
+    enums: [],
+    loadPercent: 0,
+    graphCount: 0,
+    pointSize: 2,
+    overpaintFactor: 3,
+    activeHighlight: 1,
+    yellowBrushOverIndex: 0,
+    greenBrushOverIndex: 0,
+    tealBrushOverIndex: 0,
+    purpleBrushOverIndex: 0
+  };
 
-    let urlArgs = url.parse(window.location.href);
-    let args = querystring.parse(urlArgs.query);
-    if ('csv' in args) {
-      this._parseCsv(args.csv);
-    }
-
-    return {
-      columns: [],
-      options: [],
-      enums: [],
-      loadPercent: 0,
-      graphCount: 0,
-      pointSize: 2,
-      overpaintFactor: 3,
-      activeHighlight: 1,
-      yellowBrushOverIndex: 0,
-      greenBrushOverIndex: 0,
-      tealBrushOverIndex: 0,
-      purpleBrushOverIndex: 0
-    };
-  },
-
-  _onUploadChange: function(event) {
+  _onUploadChange(event) {
     this._parseCsv(event.target.files[0]);
-  },
+  };
 
-  _updateProgressBar: function(percent) {
+  _updateProgressBar(percent) {
     this.setState({
       loadPercent: percent,
     });
-  },
+  };
 
-  _parseCsv: function(fileOrUrl) {
-
+  _parseCsv(fileOrUrl) {
     var headings = [];
     var columns = [];
     var enums = [];
@@ -152,66 +147,66 @@ var App = React.createClass({
 
     Papa.parse(fileOrUrl, config);
 
-  },
+  };
 
-  _onReaderLoad: function(headings, columns, enums) {
+  _onReaderLoad(headings, columns, enums) {
     this.setState({
       options: headings,
       columns: columns,
       enums: enums,
       graphCount: 4
     });
-  },
+  };
 
-  _onAddGraphClick: function() {
+  _onAddGraphClick() {
     this.setState({graphCount: this.state.graphCount + 1});
-  },
+  };
 
-  _onColumnsChanged: function(newColumns) {
+  _onColumnsChanged(newColumns) {
     this.setState({
       columns: newColumns
     });
-  },
+  };
 
-  _onPointSizeChange: function(pointSize) {
+  _onPointSizeChange(pointSize) {
     this.setState({pointSize: pointSize});
-  },
+  };
 
-  _onOverpaintFactorChange: function(factor) {
+  _onOverpaintFactorChange(factor) {
     this.setState({overpaintFactor: factor});
-  },
+  };
 
-  _onHighlightChanged: function(newHighlightKey) {
+  _onHighlightChanged(newHighlightKey) {
     newHighlightKey -= 1; // correct for stupid off by 1 behavior
     // that comes with react-bootstrap's implementation of tabs
     this.setState({activeHighlight: newHighlightKey});
-  },
+  };
 
-  _setYellowBrushOver: function(index) {
+  _setYellowBrushOver(index) {
     this.setState({
       yellowBrushOverIndex: parseFloat(index)
     });
-  },
+  };
 
-  _setTealBrushOver: function(index) {
+  _setTealBrushOver(index) {
     this.setState({
       tealBrushOverIndex: parseFloat(index)
     });
-  },
+  };
 
-  _setPurpleBrushOver: function(index) {
+  _setPurpleBrushOver(index) {
     this.setState({
       purpleBrushOverIndex: parseFloat(index)
     });
-  },
+  };
 
-  _setGreenBrushOver: function(index) {
+  _setGreenBrushOver(index) {
     this.setState({
       greenBrushOverIndex: parseFloat(index)
     });
-  },
+  };
 
-  render: function() {
+  render() {
     return (
       <div className="vp-app">
         <div className="vp-header">
@@ -255,7 +250,8 @@ var App = React.createClass({
               onOverpaintFactorChange={this._onOverpaintFactorChange}/>
         </div>
       </div>);
-  }
-});
+  };
+};
 
-module.exports = App;
+// module.exports = App;
+export default App;
