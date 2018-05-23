@@ -16,14 +16,15 @@
 // limitations under the License.
 
 
-var React = require('react');
-var Graphs = require('./graphs');
-var Sidebar = require('./sidebar');
-var intern = require('../util/csv');
-var Papa = require('papaparse');
-var url = require('url');
-var querystring = require('querystring');
-var ProgressBar = require('react-progress-bar-plus');
+import React, {Component} from 'react';
+import Graphs from "./graphs"
+import Sidebar from './sidebar';
+import intern from '../util/csv';
+
+import Papa from 'papaparse';
+import url from 'url';
+import querystring from 'querystring';
+import ProgressBar from 'react-progress-bar-plus';
 
 // let urlArgs = url.parse(window.location.href);
 // let args = querystring.parse(urlArgs.query);
@@ -31,7 +32,8 @@ var ProgressBar = require('react-progress-bar-plus');
 //   this._parseCsv(args.csv);
 // }
 
-class App extends React.Component {
+class App extends Component {
+
   state = {
     columns: [],
     options: [],
@@ -47,17 +49,17 @@ class App extends React.Component {
     purpleBrushOverIndex: 0
   };
 
-  _onUploadChange(event) {
+  _onUploadChange = (event) => {
     this._parseCsv(event.target.files[0]);
   };
 
-  _updateProgressBar(percent) {
+  _updateProgressBar = (percent) => {
     this.setState({
       loadPercent: percent,
     });
   };
 
-  _parseCsv(fileOrUrl) {
+  _parseCsv = (fileOrUrl) => {
     var headings = [];
     var columns = [];
     var enums = [];
@@ -149,7 +151,7 @@ class App extends React.Component {
 
   };
 
-  _onReaderLoad(headings, columns, enums) {
+  _onReaderLoad = (headings, columns, enums) => {
     this.setState({
       options: headings,
       columns: columns,
@@ -158,57 +160,56 @@ class App extends React.Component {
     });
   };
 
-  _onAddGraphClick() {
+  _onAddGraphClick = () => {
     this.setState({graphCount: this.state.graphCount + 1});
   };
 
-  _onColumnsChanged(newColumns) {
+  _onColumnsChanged = (newColumns) => {
     this.setState({
       columns: newColumns
     });
   };
 
-  _onPointSizeChange(pointSize) {
+  _onPointSizeChange = (pointSize) => {
     this.setState({pointSize: pointSize});
   };
 
-  _onOverpaintFactorChange(factor) {
+  _onOverpaintFactorChange = (factor) => {
     this.setState({overpaintFactor: factor});
   };
 
-  _onHighlightChanged(newHighlightKey) {
+  _onHighlightChanged = (newHighlightKey) => {
     newHighlightKey -= 1; // correct for stupid off by 1 behavior
     // that comes with react-bootstrap's implementation of tabs
     this.setState({activeHighlight: newHighlightKey});
   };
 
-  _setYellowBrushOver(index) {
+  _setYellowBrushOver = (index) => {
     this.setState({
       yellowBrushOverIndex: parseFloat(index)
     });
   };
 
-  _setTealBrushOver(index) {
+  _setTealBrushOver = (index) => {
     this.setState({
       tealBrushOverIndex: parseFloat(index)
     });
   };
 
-  _setPurpleBrushOver(index) {
+  _setPurpleBrushOver = (index) => {
     this.setState({
       purpleBrushOverIndex: parseFloat(index)
     });
   };
 
-  _setGreenBrushOver(index) {
+  _setGreenBrushOver = (index) => {
     this.setState({
       greenBrushOverIndex: parseFloat(index)
     });
   };
 
   render() {
-    return (
-      <div className="vp-app">
+    return (<div className="vp-app">
         <div className="vp-header">
           <ProgressBar spinner={false} percent={this.state.loadPercent}/>
           <div className="vp-header-item vp-upload">
@@ -220,7 +221,9 @@ class App extends React.Component {
             Add graph
           </div>}
         </div>
+
         <div className="vp-content">
+
           <Graphs
               activeHighlight={this.state.activeHighlight}
               columns={this.state.columns}
@@ -234,21 +237,24 @@ class App extends React.Component {
               tealBrushOverIndex={this.state.tealBrushOverIndex}
               purpleBrushOverIndex={this.state.purpleBrushOverIndex}
               pointSize={this.state.pointSize}/>
+
           <Sidebar onPointSizeChange={this._onPointSizeChange}
-              activeHighlight={this.state.activeHighlight}
-              onHighlightChanged={this._onHighlightChanged}
-              overpaintFactor={this.state.overpaintFactor}
-              pointSize={this.state.pointSize}
-              yellowBrushOverIndex={this.state.yellowBrushOverIndex}
-              greenBrushOverIndex={this.state.greenBrushOverIndex}
-              tealBrushOverIndex={this.state.tealBrushOverIndex}
-              purpleBrushOverIndex={this.state.purpleBrushOverIndex}
-              setYellowBrushOver={this._setYellowBrushOver}
-              setGreenBrushOver={this._setGreenBrushOver}
-              setTealBrushOver={this._setTealBrushOver}
-              setPurpleBrushOver={this._setPurpleBrushOver}
-              onOverpaintFactorChange={this._onOverpaintFactorChange}/>
+            activeHighlight={this.state.activeHighlight}
+            onHighlightChanged={this._onHighlightChanged}
+            overpaintFactor={this.state.overpaintFactor}
+            pointSize={this.state.pointSize}
+            yellowBrushOverIndex={this.state.yellowBrushOverIndex}
+            greenBrushOverIndex={this.state.greenBrushOverIndex}
+            tealBrushOverIndex={this.state.tealBrushOverIndex}
+            purpleBrushOverIndex={this.state.purpleBrushOverIndex}
+            setYellowBrushOver={this._setYellowBrushOver}
+            setGreenBrushOver={this._setGreenBrushOver}
+            setTealBrushOver={this._setTealBrushOver}
+            setPurpleBrushOver={this._setPurpleBrushOver}
+            onOverpaintFactorChange={this._onOverpaintFactorChange}/>
+
         </div>
+
       </div>);
   };
 };

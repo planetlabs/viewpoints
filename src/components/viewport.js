@@ -17,10 +17,11 @@
 // implied. See the License for the specific language governing permissions and
 // limitations under the License.
 
-var React = require('react');
-var Webgl = require('../util/webgl');
-var platform = require('platform');
-var PropTypes = require('prop-types');
+
+import React from 'react';
+import Webgl from '../util/webgl';
+import platform from 'platform'
+import PropTypes from 'prop-types';
 
 const vertexShader = `
     attribute vec2 a_position;
@@ -62,7 +63,7 @@ class Viewport extends React.Component {
     zoomY: 0.8
   };
 
-  componentDidMount() {
+  componentDidMount = () => {
     var canvas = this.refs.webglCanvas;
     this._prepareWebgl(canvas);
     this._setAxes(canvas);
@@ -76,7 +77,7 @@ class Viewport extends React.Component {
     this._paintHud(hudCanvas);
   };
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate = (prevProps, prevState) => {
     var canvas = this.refs.webglCanvas;
     this.gl.viewport(0, 0, this.props.width, this.props.height);
     if (this.props.columns !== prevProps.columns) {
@@ -90,7 +91,7 @@ class Viewport extends React.Component {
     this._paintHud(hudCanvas);
   };
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps = (nextProps) => {
     var canvas = this.refs.webglCanvas;
     if (this.props.xAxisSelectedIndex != nextProps.xAxisSelectedIndex ||
         this.props.yAxisSelectedIndex != nextProps.yAxisSelectedIndex) {
@@ -105,7 +106,7 @@ class Viewport extends React.Component {
     }
   };
 
-  _paintHud(canvas) {
+  _paintHud = (canvas) => {
     var ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     var yellow = 'rgb(200, 200, 0)';
@@ -158,7 +159,7 @@ class Viewport extends React.Component {
     ctx.translate(-offset, -canvas.height / 2);
   };
 
-  _prepareWebgl(canvas) {
+  _prepareWebgl = (canvas) => {
     var gl = Webgl.initWebGL(canvas);
     var program = Webgl.createProgramFromScripts(gl, vertexShader, fragmentShader);
 
@@ -196,7 +197,7 @@ class Viewport extends React.Component {
     this.gl = gl;
   };
 
-  _paint(canvas) {
+  _paint = (canvas) => {
     this.gl.uniform2f(this.translationLocation, this.state.translationX, this.state.translationY);
     this.gl.uniform2f(this.zoomLocation, this.state.zoomX, this.state.zoomY);
     this.gl.uniform1f(this.pointSizeLocation, this.props.pointSize);
@@ -300,7 +301,7 @@ class Viewport extends React.Component {
       1, 2]), gl.STATIC_DRAW);
   };
 
-  _setAxes(canvas, indexX = this.props.xAxisSelectedIndex, indexY = this.props.yAxisSelectedIndex) {
+  _setAxes = (canvas, indexX = this.props.xAxisSelectedIndex, indexY = this.props.yAxisSelectedIndex) => {
 
     var xAxis = this.props.columns[indexX];
     var yAxis = this.props.columns[indexY];
@@ -363,23 +364,23 @@ class Viewport extends React.Component {
     this.ptArrays = ptArrays;
   };
 
-  _rawToNormalizedX(event) {
+  _rawToNormalizedX = (event) => {
     return ((event.offsetX / this.props.width) * 2 - 1) / this.state.zoomX - this.state.translationX;
   };
 
-  _rawToNormalizedY(event) {
+  _rawToNormalizedY = (event) => {
     return (((event.target.height - event.offsetY) / this.props.height) * 2 - 1) / this.state.zoomY - this.state.translationY;
   };
 
-  _normalizedToRawX(x) {
+  _normalizedToRawX = (x) => {
     return (((x + this.state.translationX) * this.state.zoomX) + 1) / 2 * this.props.width;
   };
 
-  _normalizedToRawY(y) {
+  _normalizedToRawY = (y) => {
     return (((y + this.state.translationY) * this.state.zoomY) + 1) / 2 * this.props.height;
   };
 
-  mousedown(event) {
+  mousedown = (event) => {
     var x = this._rawToNormalizedX(event);
     var y = this._rawToNormalizedY(event);
     this.setState({
@@ -393,7 +394,7 @@ class Viewport extends React.Component {
     });
   };
 
-  mousemove(event) {
+  mousemove = (event) => {
     var x = this._rawToNormalizedX(event);
     var y = this._rawToNormalizedY(event);
 
@@ -458,7 +459,7 @@ class Viewport extends React.Component {
     }
   };
 
-  mouseup(event) {
+  mouseup = (event) => {
     var x = this._rawToNormalizedX(event);
     var y = this._rawToNormalizedY(event);
     this.setState({
@@ -470,7 +471,7 @@ class Viewport extends React.Component {
 
   render() {
     var hudStyle = {
-      "pointer-events": "none"
+      "pointerEvents": "none"
     };
     return (
       <div>

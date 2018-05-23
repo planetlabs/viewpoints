@@ -17,11 +17,14 @@
 // implied. See the License for the specific language governing permissions and
 // limitations under the License.
 
-var React = require('react');
-var Graph = require('./graph');
-var difference = require('lodash/difference');
-var intersection = require('lodash/intersection');
-var PropTypes = require('prop-types');
+
+import React from 'react';
+import Graph from './graph';
+
+import difference from 'lodash/difference';
+import intersection from 'lodash/intersection';
+
+import PropTypes from 'prop-types';
 var maxPerArray = 65530;
 var numBrushes = 6;
 
@@ -76,7 +79,7 @@ class Graphs extends React.Component {
     }
   };
 
-  _invertSelection() {
+  _invertSelection = () => {
     if (this.props.activeHighlight == 0) {
       return;
     }
@@ -101,7 +104,7 @@ class Graphs extends React.Component {
     });
   };
 
-  _keydown(event) {
+  _keydown = (event) => {
     switch (event.which) {
       case 73: // 'i' key: invert
         this._invertSelection();
@@ -115,7 +118,7 @@ class Graphs extends React.Component {
     }
   };
 
-  _deleteHighlighted() {
+  _deleteHighlighted = () => {
     var totalHighlighted = 0;
     for (var a = 0; a < this.state.highlightedIndicesArrays.length; a++) {
       var highlightedIndices = this.state.highlightedIndicesArrays[a];
@@ -145,7 +148,7 @@ class Graphs extends React.Component {
     })
   };
 
-  _findSelectedIndices(ptArrays, xDown, xUp, yDown, yUp) {
+  _findSelectedIndices = (ptArrays, xDown, xUp, yDown, yUp) => {
     if (this.props.activeHighlight == 0) {
       return;
     }
@@ -255,9 +258,10 @@ class Graphs extends React.Component {
       );
     }
 
+
     return (
       <div className={this.props.className || 'vp-graphs'}>
-        {rows.map((graphs, index) => {
+        {rows.length && rows.map((graphs, index) => {
           return (
             <div className={this.props.rowClassName || 'vp-graphs-row'}
                 key={index}>

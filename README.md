@@ -59,18 +59,5 @@ npm start
 ```
 Then open up a browser to
 ```
-localhost:3000
+localhost:8080
 ```
-
-# To Compile and Run Using Docker
-```
-git clone https://github.com/planetlabs/viewpoints.git
-cd viewpoints
-docker build -t viewpoints .
-docker run -it [--env='NODE_ENV=production'] [--volume "$PWD":/usr/src/app] viewpoints
-```
-In the output will be section of "Access URLs" and the main interface is labelled "External"
-
-The optional `--env` option will speed things up by disabling React's Prototype checks.
-
-The optional `--volume` option will mount the viewpoints directory in the docker image. Without this option, you must `docker build` and `docker run` every time you want to see local changes in the running viewpoints. With the option, you only need to `docker build` when you would otherwise `npm install`.

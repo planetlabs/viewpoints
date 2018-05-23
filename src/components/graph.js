@@ -15,11 +15,10 @@
 // implied. See the License for the specific language governing permissions and
 // limitations under the License.
 
-var React = require('react');
-
-var Dropdown = require('./dropdown');
-var Viewport = require('./viewport');
-var PropTypes = require('prop-types');
+import React from 'react';
+import Dropdown from './dropdown';
+import Viewport from './viewport';
+import PropTypes from 'prop-types';
 
 class Graph extends React.Component {
   state =  {
@@ -32,7 +31,7 @@ class Graph extends React.Component {
     thumbnails: false
   };
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate = (prevProps, prevState) => {
     if (prevState.viewportWidth !== this.refs.viewport.offsetWidth ||
         prevState.viewportHeight !== this.refs.viewport.offsetHeight) {
 
@@ -43,23 +42,23 @@ class Graph extends React.Component {
     }
   };
 
-  componentDidMount() {
+  componentDidMount = () => {
     this._onResize();
     window.addEventListener('resize', this._onResize);
   };
 
-  componentWillUnmount() {
+  componentWillUnmount = () => {
     window.removeEventListener('resize', this._onResize);
   };
 
-  _onResize() {
+  _onResize = () => {
     this.setState({
       viewportHeight: this.refs.viewport.offsetHeight,
       viewportWidth: this.refs.viewport.offsetWidth
     });
   };
 
-  _onXAxisSelect(index) {
+  _onXAxisSelect = (index) => {
     let newEnumsX = this.props.enums[index];
     let thumbnails = false;
     if (newEnumsX.size > 2) {
@@ -94,11 +93,11 @@ class Graph extends React.Component {
 
   };
 
-  _onYAxisSelect(index) {
+  _onYAxisSelect = (index) => {
     this.setState({yAxisSelectedIndex: index});
   };
 
-  _swapAxes() {
+  _swapAxes = () => {
     let x = this.state.xAxisSelectedIndex;
     let y = this.state.yAxisSelectedIndex;
     this.setState({

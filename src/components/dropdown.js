@@ -16,20 +16,18 @@
 // implied. See the License for the specific language governing permissions and
 // limitations under the License.
 
-var React = require('react');
-var PropTypes = require('prop-types');
-var bootstrap = require('react-bootstrap');
-var DropdownButton = bootstrap.DropdownButton;
-var MenuItem = bootstrap.MenuItem;
-import Typeahead from 'react-bootstrap-typeahead';
+import React from 'react';
+import PropTypes from 'prop-types';
+import bootstrap, {DropdownButton, MenuItem} from 'react-bootstrap';
+import {Typeahead} from 'react-bootstrap-typeahead';
 
 class Dropdown extends React.Component {
-  _handleChange(elements) {
+  _handleChange = (elements) => {
     if (elements.length > 0) {
       let element = elements[0];
       this.props.onSelect(element.id);
     }
-  }
+  };
 
   render() {
     let taOptions = this.props.options.map((option, index) => {

@@ -1,71 +1,84 @@
 {
-  "name": "starter",
+  "name": "Viewpoints",
   "version": "1.0.0",
-  "description": "A simple React static site development boilerplate",
-  "author": "Trevor Blades",
+  "description": "A Graphical tool for viewing high dimensionality data",
+  "author": "Matt Ferraro <matt@planet.com>",
   "license": "MIT",
+  "main": "index.js",
+  "scripts": {
+    "start": "cross-env NODE_ENV=development webpack-dev-server --mode development --config ./config/webpack.config.dev.js",
+    "build": "cross-env NODE_ENV=production webpack --mode production --config ./config/webpack.config.prod.js",
+    "lint": "eslint ./src",
+    "lint:fix": "eslint --fix ./src",
+    "precommit": "lint-staged",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "clean": "rm -rf node_modules/ && rm -rf dist/"
+  },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/trevorblades/starter.git"
+    "url": "git@github.com:planetlabs/viewpoints.git"
   },
-  "scripts": {
-    "start": "gulp dev",
-    "dist": "gulp dist",
-    "lint": "eslint src gulpfile.js"
+  "bugs": {
+    "url": "https://github.com/planetlabs/viewpoints/issues",
+    "email": "matt@planet.com"
   },
-  "browserify": {
-    "transform": [
-      [
-        "babelify",
-        {
-          "ignore": "node_modules",
-          "plugins": [
-            "transform-runtime"
-          ],
-          "presets": [
-            "es2015",
-            "react"
-          ]
-        }
-      ]
+  "browserlist": [
+    "> 1%",
+    "ie > 9"
+  ],
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-eslint": "^8.2.2",
+    "babel-loader": "^7.1.4",
+    "babel-plugin-emotion": "^9.1.2",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-react": "^6.24.1",
+    "babel-preset-stage-2": "^6.24.1",
+    "clean-webpack-plugin": "^0.1.19",
+    "cross-env": "^5.1.4",
+    "css-loader": "^0.28.11",
+    "dotenv-webpack": "^1.5.5",
+    "eslint": "^4.19.1",
+    "eslint-config-prettier": "^2.9.0",
+    "eslint-plugin-import": "^2.10.0",
+    "eslint-plugin-prettier": "^2.6.0",
+    "html-webpack-plugin": "^3.2.0",
+    "husky": "^0.14.3",
+    "less": "^3.0.4",
+    "less-loader": "^4.1.0",
+    "lint-staged": "^7.0.4",
+    "prettier": "^1.11.1",
+    "style-loader": "^0.21.0",
+    "webpack": "^4.5.0",
+    "webpack-cli": "^2.0.14",
+    "webpack-dev-server": "^3.1.3",
+    "webpack-merge": "^4.1.2"
+  },
+  "engines": {
+    "node": ">=9.3.0"
+  },
+  "lint-staged": {
+    "src/**/*.{js,jsx,json,css,md}": [
+      "eslint --fix src",
+      "git add"
     ]
   },
-  "eslintConfig": {
-    "extends": "planet/react"
-  },
-  "devDependencies": {
-    "babel-core": "^6.26.3",
-    "babel-plugin-transform-runtime": "^6.23.0",
-    "babel-preset-es2015": "^6.24.1",
-    "babel-preset-react": "^6.24.1",
-    "babelify": "^8.0.0",
-    "browser-sync": "^2.24.2",
-    "browserify": "^16.2.0",
-    "del": "^3.0.0",
-    "eslint": "^4.19.1",
-    "eslint-config-planet": "^16.0.0",
-    "eslint-plugin-react": "^7.7.0",
-    "gulp": "github:gulpjs/gulp#4.0",
-    "gulp-less": "^3.5.0",
-    "gulp-sourcemaps": "^2.6.4",
-    "gulp-uglify": "^3.0",
-    "gulp-util": "^3.0.7",
-    "less-plugin-autoprefix": "^1.5.1",
-    "less-plugin-clean-css": "^1.5.1",
-    "normalize-css": "^2.3.1",
-    "proptypes": "^1.1.0",
-    "react": "^16.3.2",
-    "react-bootstrap": "^0.32.1",
-    "react-bootstrap-typeahead": "^3.1.2",
-    "react-dom": "^16.3.2",
-    "vinyl-buffer": "^1.0.1",
-    "vinyl-source-stream": "^2.0"
-  },
   "dependencies": {
+    "emotion": "^9.1.3",
     "lodash.chunk": "^4.2.0",
     "lodash.difference": "^4.5.0",
     "lodash.flatten": "^4.4.0",
-    "papaparse": "^4.1.2",
-    "platform": "^1.3.1"
+    "normalize-css": "^2.3.1",
+    "papaparse": "^4.4.0",
+    "platform": "^1.3.5",
+    "prop-types": "^15.6.1",
+    "proptypes": "^1.1.0",
+    "react": "^16.3.2",
+    "react-bootstrap": "^0.32.1",
+    "react-bootstrap-typeahead": "^3.1.3",
+    "react-dom": "^16.3.2",
+    "react-emotion": "^9.1.3",
+    "react-hot-loader": "^4.1.3",
+    "react-progress-bar-plus": "^1.3.1"
   }
 }

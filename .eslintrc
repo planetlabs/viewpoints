@@ -1,0 +1,35 @@
+{
+    "extends": [
+        "prettier",
+        "plugin:prettier/recommended",
+        "eslint:recommended"
+    ],
+    "parser": "babel-eslint",
+    "env": {
+        "es6": true,
+        "browser": true,
+        "node": true,
+        "jest": true
+    },
+    "parserOptions": {
+        "ecmaVersion": 2017,
+        "sourceType": "module",
+        "ecmaFeatures": {
+            "jsx": true
+        }
+    },
+    "globals": {
+        "document": true,
+        "window": true,
+        "location": true
+    },
+    "rules": {
+        "prettier/prettier": "error",
+        "no-unused-vars": 1,
+        "no-console": 1,
+        "indent": [true, 4]
+    },
+    "plugins": [
+        "prettier"
+    ]
+}

@@ -17,25 +17,20 @@
 // implied. See the License for the specific language governing permissions and
 // limitations under the License.
 
-var React = require('react');
-var bootstrap = require('react-bootstrap');
-var Tabs = bootstrap.Tabs;
-var Tab = bootstrap.Tab;
-var Button = bootstrap.Button;
-var ButtonGroup = bootstrap.ButtonGroup;
-var Glyphicon = bootstrap.Glyphicon;
-var PropTypes = require('prop-types');
+import React from 'react';
+import bootstrap, {Tab, Tabs, Button, ButtonGroup, Glyphicon} from 'react-bootstrap';
+import PropTypes from 'prop-types';
 
 class Sidebar extends React.Component {
-  _onPointSizeChange(event) {
+  _onPointSizeChange = (event) => {
     this.props.onPointSizeChange(parseFloat(event.target.value));
   };
 
-  _onOverpaintFactorChange(event) {
+  _onOverpaintFactorChange = (event) => {
     this.props.onOverpaintFactorChange(parseFloat(event.target.value));
   };
 
-  _setYellowBrushOverIndex(index) {
+  _setYellowBrushOverIndex = (index) => {
     this.props.setYellowBrushOver(index);
   };
 
@@ -79,8 +74,8 @@ class Sidebar extends React.Component {
       <div>
         <div className="vp-sidebar-item-label">Select From</div>
         <ButtonGroup>
-          <Button disabled>{redGlyph}</Button>
-          <Button disabled>{blueGlyph}</Button>
+          <Button disabled>{redGlyph}Red</Button>
+          <Button disabled>{blueGlyph}Hi</Button>
           <Button disabled>{greenGlyph}</Button>
           <Button disabled>{yellowGlyph}</Button>
           <Button disabled>{tealGlyph}</Button>
