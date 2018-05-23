@@ -20,7 +20,7 @@ const config = {
     output: {
         path: PATHS.build,
         pathinfo: true,
-        publicPath: "/"
+        publicPath: "/viewpoints/"
     },
     resolve: {
         extensions: ["*", ".js", ".jsx"]
