@@ -53,8 +53,8 @@ The tool is written using the [React](https://facebook.github.io/react/) framewo
 ```
 git clone https://github.com/planetlabs/viewpoints.git
 cd viewpoints
-export NODE_ENV=production    # optional, but makes it run faster by not doing React's Proptype checks
 npm install
+export NODE_ENV=production    # optional, but makes it run faster by not doing React's Proptype checks
 npm start
 ```
 Then open up a browser to
